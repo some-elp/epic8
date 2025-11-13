@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using epic8.Calcs;
 using epic8.Skills;
 
 namespace epic8
@@ -10,7 +11,7 @@ namespace epic8
     public class Character
     {
         public string Name { get; }
-        public string Element { get; }
+        public Element Element { get; }
         public string Role { get; }
 
         public Stats BaseStats { get; }
@@ -22,7 +23,7 @@ namespace epic8
         public float CRMeter { get; set; } //number between 0 and 1
         public bool isAlive { get; set; } = true;
 
-        public Character(string name, string element, string role, Stats baseStats, Stats currentStats, List<Skill> skills)
+        public Character(string name, Element element, string role, Stats baseStats, Stats currentStats, List<Skill> skills)
         {
             this.Name = name;
             this.Element = element;
@@ -30,6 +31,7 @@ namespace epic8
             this.BaseStats = baseStats;
             this.CurrentStats = currentStats;
             this.Skills = skills;
+            this.CurrentHP = currentStats.Hp;
         }
 
         public void takeTurn(List<Character> enemies)

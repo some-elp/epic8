@@ -9,6 +9,8 @@ namespace epic8.Field
     public class TurnManager
     {
         public List<Character> units;
+
+        private int _turnCount = 1;
         public TurnManager(List<Character> characters)
         {
             units = characters;
@@ -27,6 +29,7 @@ namespace epic8.Field
         public void PrintTimeline()
         {
             Console.WriteLine("--- Current Timeline ---");
+            Console.WriteLine($"--- Turn {_turnCount} ---");
             foreach (Character unit in units)
             {
                 Console.WriteLine($" - {unit}");
@@ -71,10 +74,12 @@ namespace epic8.Field
                     //The other units that are at 100% get set to almost 100% to prevent two characters moving at once.
                     foreach (Character other in readyUnits.Skip(1))
                     {
-                        other.CRMeter = 0.99999f;
+                        other.CRMeter = 0.9999f;
                     }
                     return readyUnit;
                 }
+
+                _turnCount++;
 
                 //no one at 100%, advance time
                 AdvanceTime();

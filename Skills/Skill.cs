@@ -14,13 +14,24 @@ namespace epic8.Skills
         public int Cooldown { get; }
         public int CurrentCooldown { get; }
 
-        public Skill(string name, string description, int cooldown)
+        public float atkRate;
+        public float hpScaling;
+        public float defScaling;
+        public float power;
+
+        public Skill(string name, string description, int cooldown, float atkRate, float hpScaling, float defScaling, float power)
         {
             this.Name = name;
             this.Description = description;
             this.Cooldown = cooldown;
+            this.atkRate = atkRate;
+            this.hpScaling = hpScaling;
+            this.defScaling = defScaling;
+            this.power = power;
         }
 
         public abstract void UseSkill(Character user, Character target);
+
+        public abstract float ExtraModifier();
     }
 }

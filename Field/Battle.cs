@@ -11,7 +11,6 @@ namespace epic8.Field
         private readonly List<Character> _team1;
         private readonly List<Character> _team2;
 
-        private int _turnCount = 0;
         private TurnManager _turnManager;
 
         public Battle(List<Character> team1, List<Character> team2)
@@ -46,18 +45,17 @@ namespace epic8.Field
                     continue;
                 }
 
-                _turnCount++;
                 acting.takeTurn(enemies);
                 foreach ( Character unit in _team1)
                 {
-                    if (unit.CurrentStats.Hp <= 0 )
+                    if (unit.CurrentHP <= 0 )
                     {
                         unit.isAlive = false;
                     }
                 }
                 foreach (Character unit in _team2)
                 {
-                    if (unit.CurrentStats.Hp <= 0)
+                    if (unit.CurrentHP <= 0)
                     {
                         unit.isAlive = false;
                     }
