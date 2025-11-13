@@ -18,8 +18,9 @@ namespace epic8.Skills
         public float hpScaling;
         public float defScaling;
         public float power;
+        public float damageMod;
 
-        public Skill(string name, string description, int cooldown, float atkRate, float hpScaling, float defScaling, float power)
+        public Skill(string name, string description, int cooldown, float atkRate, float hpScaling, float defScaling, float power, float damageMod)
         {
             this.Name = name;
             this.Description = description;
@@ -28,6 +29,7 @@ namespace epic8.Skills
             this.hpScaling = hpScaling;
             this.defScaling = defScaling;
             this.power = power;
+            this.damageMod = damageMod;
         }
 
         public abstract void UseSkill(Character user, Character target);

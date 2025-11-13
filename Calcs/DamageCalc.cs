@@ -9,12 +9,12 @@ namespace epic8.Calcs
 {
     public static class DamageCalc
     {
-        public static float CalculateDamage(Character user, Character target, Skill skill)
+        public static Tuple<float, HitType> CalculateDamage(Character user, Character target, Skill skill)
         {
 
             /*
              * Damage Formula:
-             * (attack*att_rate + health*hpScaling + defense*defScaling)*(1 + spd*speed_rate)*ele*(1.871*pow!)/(def/300+1)*hitType 
+             * (attack*att_rate + health*hpScaling + defense*defScaling)*(1 + spd*speed_rate)*ele*(1.871*pow!)*skillMod/(def/300+1)*hitType 
              */
 
             //target's defense
@@ -36,9 +36,9 @@ namespace epic8.Calcs
             //used for skills with additional damage modifiers.
             float extraMod = skill.ExtraModifier();
 
-            float damage = (float)((attack*skill.atkRate+hp*skill.hpScaling+userDefense*skill.defScaling)
-                *extraMod*adv*(1.871*skill.power)/(targetDefense/300+1)*hitMod);
-            return damage;
+            float damage = (float)Math.Round((attack*skill.atkRate+hp*skill.hpScaling+userDefense*skill.defScaling)
+                *extraMod*adv*(1.871*skill.power)*skill.damageMod/(targetDefense/300+1)*hitMod);
+            return Tuple.Create(damage, hitType);
         }
     }
 }

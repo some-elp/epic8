@@ -10,8 +10,8 @@ namespace epic8.Skills
 {
     public class BasicSkill : Skill
     {
-        public BasicSkill(string name, string description, int cooldown, float atkRate, float hpScaling, float defScaling, float power) : 
-            base(name, description, cooldown, atkRate, hpScaling, defScaling, power)
+        public BasicSkill(string name, string description, int cooldown, float atkRate, float hpScaling, float defScaling, float power, float damageMod) : 
+            base(name, description, cooldown, atkRate, hpScaling, defScaling, power, damageMod)
         {
         }
 
@@ -22,9 +22,16 @@ namespace epic8.Skills
 
         public override void UseSkill(Character user, Character target)
         {
-            float damage = DamageCalc.CalculateDamage(user, target, this);
-            target.CurrentHP -= damage;
-            Console.WriteLine($"{user.Name} uses Basic Skill on {target.Name} for {damage} damage.");
+            //item1 = damage, item2 = hitType
+            Tuple<float, HitType> tuple = DamageCalc.CalculateDamage(user, target, this);
+            target.CurrentHP -= tuple.Item1;
+            if (tuple.Item2 == HitType.Miss)
+                Console.WriteLine($"{user.Name} has missed on {target.Name}!");
+            if (tuple.Item2 == HitType.Critical)
+                Console.WriteLine($"{user.Name} scores a critical hit on {target.Name}!");
+            if (tuple.Item2 == HitType.Crushing)
+                Console.WriteLine($"{user.Name} scores a crushing hit on {target.Name}!");
+            Console.WriteLine($"{user.Name} uses {this.Name}, Skill 1 on {target.Name} for {tuple.Item1} damage.");
             Console.WriteLine($"{target.Name} has {target.CurrentHP} HP remaining.");
         }
     }

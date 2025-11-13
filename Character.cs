@@ -47,7 +47,7 @@ namespace epic8
 
         public override string ToString()
         {
-            return $"{Name} (HP, {CurrentStats.Hp}, Speed {BaseStats.Speed}, CR {CRMeter})";
+            return $"{Name} (HP, {CurrentHP}/{CurrentStats.Hp}, Speed {BaseStats.Speed}, CR {CRMeter})";
         }
 
 
