@@ -48,12 +48,19 @@ namespace epic8.Calcs
 
         public static float GetHitMultiplier(HitType hitType, Character user)
         {
+            //75% damage if miss, cannot proc non-artifact effects
             if (hitType == HitType.Miss)
                 return 0.75f;
+
+            //Critical Hit Damage determined by user's CritDamage stat
             if (hitType == HitType.Critical)
                 return user.CurrentStats.CritDamage / 100.0f;
+
+            //A hit with +30% damage
             if (hitType == HitType.Crushing)
                 return 1.3f;
+
+            //Regular damage
             return 1.0f;
         }
     }

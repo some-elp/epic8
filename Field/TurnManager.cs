@@ -20,6 +20,8 @@ namespace epic8.Field
         private void InitializeCRBar()
         {
             float maxSpeed = units.Max(u => u.CurrentStats.Speed);
+
+            //Set starting CRMeter of units as a proportion of the highest speed.
             foreach (Character unit in units)
             {
                 unit.CRMeter = (float)unit.CurrentStats.Speed / maxSpeed;
