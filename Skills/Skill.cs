@@ -7,6 +7,16 @@ using epic8.Field;
 
 namespace epic8.Skills
 {
+
+    public enum TargetType
+    {
+        SingleEnemy,
+        AllEnemies,
+        SingleAlly,
+        AllAllies,
+        Self
+    }
+
     public abstract class Skill
     {
         public string Name { get; }
@@ -14,22 +24,24 @@ namespace epic8.Skills
         public int Cooldown { get; }
         public int CurrentCooldown { get; }
 
-        public float atkRate;
-        public float hpScaling;
-        public float defScaling;
-        public float power;
-        public float damageMod;
+        public float AtkRate;
+        public float HpScaling;
+        public float DefScaling;
+        public float Power;
+        public float DamageMod;
+        public TargetType TargetType { get; }
 
-        public Skill(string name, string description, int cooldown, float atkRate, float hpScaling, float defScaling, float power, float damageMod)
+        public Skill(string name, string description, int cooldown, float atkRate, float hpScaling, float defScaling, float power, float damageMod, TargetType targetType)
         {
-            this.Name = name;
-            this.Description = description;
-            this.Cooldown = cooldown;
-            this.atkRate = atkRate;
-            this.hpScaling = hpScaling;
-            this.defScaling = defScaling;
-            this.power = power;
-            this.damageMod = damageMod;
+            Name = name;
+            Description = description;
+            Cooldown = cooldown;
+            AtkRate = atkRate;
+            HpScaling = hpScaling;
+            DefScaling = defScaling;
+            Power = power;
+            DamageMod = damageMod;
+            TargetType = targetType;
         }
 
         public abstract void UseSkill(Character user, Character target);

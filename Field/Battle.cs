@@ -33,15 +33,18 @@ namespace epic8.Field
                 //Get next acting unit
                 Character acting = _turnManager.GetNextTurn();
                 List<Character> enemies;
+                List<Character> allies;
 
                 //Decide which group is considered the enemies
                 if (_team1.Contains(acting))
                 {
                     enemies = _team2;
+                    allies = _team1;
                 }
                 else
                 {
                     enemies = _team1;
+                    allies = _team2;
                 }
 
                 //Loop again if we somehow picked up a dead unit to take the turn.
@@ -51,7 +54,7 @@ namespace epic8.Field
                 }
 
                 //Acting unit takes its turn.
-                acting.takeTurn(enemies);
+                acting.takeTurn(enemies, allies);
 
                 //Check to see if any units have died after this turn.
                 foreach ( Character unit in _team1)

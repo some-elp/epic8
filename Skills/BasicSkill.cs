@@ -10,8 +10,8 @@ namespace epic8.Skills
 {
     public class BasicSkill : Skill
     {
-        public BasicSkill(string name, string description, int cooldown, float atkRate, float hpScaling, float defScaling, float power, float damageMod) : 
-            base(name, description, cooldown, atkRate, hpScaling, defScaling, power, damageMod)
+        public BasicSkill(string name, string description, int cooldown, float atkRate, float hpScaling, float defScaling, float power, float damageMod, TargetType targetType) : 
+            base(name, description, cooldown, atkRate, hpScaling, defScaling, power, damageMod, targetType)
         {
         }
 

@@ -36,8 +36,8 @@ namespace epic8.Calcs
             //used for skills with additional damage modifiers.
             float extraMod = skill.ExtraModifier();
 
-            float damage = (float)Math.Round((attack*skill.atkRate+hp*skill.hpScaling+userDefense*skill.defScaling)
-                *extraMod*adv*(1.871*skill.power)*skill.damageMod/(targetDefense/300+1)*hitMod);
+            float damage = (float)Math.Round((attack*skill.AtkRate+hp*skill.HpScaling+userDefense*skill.DefScaling)
+                *extraMod*adv*(1.871*skill.Power)*skill.DamageMod/(targetDefense/300+1)*hitMod);
             return Tuple.Create(damage, hitType);
         }
     }

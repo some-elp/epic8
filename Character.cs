@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using epic8.Calcs;
+using epic8.NPCBehavior;
 using epic8.Skills;
 
 namespace epic8
@@ -27,44 +28,52 @@ namespace epic8
         public bool isAlive { get; set; } = true;
 
         public ControlType Control { get; }
+        public INPCController? NPCController { get; }
 
-        public Character(string name, Element element, string role, Stats baseStats, Stats currentStats, List<Skill> skills, ControlType control)
+        public Character(string name, Element element, string role, Stats baseStats, Stats currentStats, List<Skill> skills, ControlType control, INPCController? npc = null)
         {
-            this.Name = name;
-            this.Element = element;
-            this.Role = role;
-            this.BaseStats = baseStats;
-            this.CurrentStats = currentStats;
-            this.Skills = skills;
-            this.CurrentHP = currentStats.Hp;
-            this.Control = control;
+            Name = name;
+            Element = element;
+            Role = role;
+            BaseStats = baseStats;
+            CurrentStats = currentStats;
+            Skills = skills;
+            CurrentHP = currentStats.Hp;
+            Control = control;
+            NPCController = npc;
         }
 
-        public void takeTurn(List<Character> enemies)
+        public void takeTurn(List<Character> enemies, List<Character> allies)
         {
             //Determine whether the player gets to control this unit or not.
             if(Control == ControlType.NPC)
             {
-                NPCTurn(enemies);
+                NPCTurn(enemies, allies);
             }
             else
             {
-                PlayerTurn(enemies);
+                PlayerTurn(enemies, allies);
             }
         }
 
-        private void NPCTurn(List<Character> enemies)
+        private void NPCTurn(List<Character> enemies, List<Character> allies)
         {
-            Skill skill = this.Skills.First();
-            Character target = enemies.FirstOrDefault(e => e.isAlive);
-            if (target == null)
+            if (NPCController == null)
             {
-                return;
+                Console.WriteLine($"{Name} has no AI behavior, skipping turn");
             }
-            skill.UseSkill(this, target);
+            else
+            {
+                var (skill, target) = NPCController.ChooseAction(this, allies, enemies);
+                if (target == null)
+                {
+                    return;
+                }
+                skill.UseSkill(this, target);
+            }
         }
 
-        private void PlayerTurn(List<Character> enemies)
+        private void PlayerTurn(List<Character> enemies, List<Character> allies)
         {
             //Show skills of the current unit
             for (int i=0; i < this.Skills.Count; i++)
@@ -94,33 +103,51 @@ namespace epic8
             //List only enemies that are alive
             List<Character> aliveEnemies = enemies.Where(e => e.isAlive).ToList();
 
-            for(int j=0; j < aliveEnemies.Count; j++)
+            if (skill.TargetType == TargetType.SingleEnemy)
             {
-                Console.WriteLine($"{j + 1}: {aliveEnemies[j]}");
-            }
 
-            int targetChoice;
-            
-            //Target selection input validation
-            while (true)
+
+
+                for (int j = 0; j < aliveEnemies.Count; j++)
+                {
+                    Console.WriteLine($"{j + 1}: {aliveEnemies[j]}");
+                }
+
+                int targetChoice;
+
+                //Target selection input validation
+                while (true)
+                {
+                    Console.Write("Choose a target: ");
+                    string? input = Console.ReadLine();
+
+                    if (int.TryParse(input, out targetChoice) && targetChoice >= 1 && targetChoice <= aliveEnemies.Count)
+                    {
+                        //read value as 0-2 for the list
+                        targetChoice -= 1;
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input. Please enter a valid target number.");
+                    }
+                }
+
+                Character target = aliveEnemies[targetChoice];
+                skill.UseSkill(this, target);
+            }
+            else if(skill.TargetType == TargetType.AllEnemies)
             {
-                Console.Write("Choose a target: ");
-                string? input = Console.ReadLine();
-
-                if (int.TryParse(input, out targetChoice) && targetChoice >= 1 && targetChoice <= aliveEnemies.Count)
-                {
-                    //read value as 0-2 for the list
-                    targetChoice -= 1;
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid input. Please enter a valid target number.");
-                }
+                //TODO: change Skill class to allow aoe targeting
             }
-
-            Character target = aliveEnemies[targetChoice];
-            skill.UseSkill(this, target);
+            else if(skill.TargetType == TargetType.SingleAlly)
+            {
+                //TODO: copy enemy targeting but for allies
+            }
+            else if(skill.TargetType == TargetType.AllAllies)
+            {
+                //TODO: change Skill class to allow aoe targeting
+            }
         }
 
         public override string ToString()
