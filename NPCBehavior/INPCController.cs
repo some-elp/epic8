@@ -1,4 +1,5 @@
 ﻿using epic8.Skills;
+using epic8.Units;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace epic8.NPCBehavior
 {
     public interface INPCController
     {
-        (Skill, Character target) ChooseAction(Character user, List<Character> allies, List<Character> enemies);
+        (Skill, List<Character> target) ChooseAction(Character user, List<Character> allies, List<Character> enemies);
     }
 }

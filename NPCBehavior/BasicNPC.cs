@@ -1,4 +1,5 @@
 ﻿using epic8.Skills;
+using epic8.Units;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace epic8.NPCBehavior
     {
 
         //really basic AI for now
-        public (Skill, Character target) ChooseAction(Character user, List<Character> allies, List<Character> enemies)
+        public (Skill, List<Character> target) ChooseAction(Character user, List<Character> allies, List<Character> enemies)
         {
             Random rng = new Random();
 
@@ -22,7 +23,7 @@ namespace epic8.NPCBehavior
             List<Character> aliveEnemies = enemies.Where(e => e.isAlive).ToList();
 
             //randomly pick an enemy from aliveEnemies
-            Character target = aliveEnemies[rng.Next(aliveEnemies.Count)];
+            List<Character> target = [aliveEnemies[rng.Next(aliveEnemies.Count)]];
 
             return (skill, target);
         }

@@ -8,7 +8,7 @@ using epic8.Calcs;
 using epic8.NPCBehavior;
 using epic8.Skills;
 
-namespace epic8
+namespace epic8.Units
 {
 
     public enum ControlType { Player, NPC }
@@ -54,6 +54,13 @@ namespace epic8
             {
                 PlayerTurn(enemies, allies);
             }
+            foreach (Skill skill in Skills)
+            {
+                if(skill.CurrentCooldown > 0)
+                {
+                    skill.CurrentCooldown -= 1;
+                }
+            }
         }
 
         private void NPCTurn(List<Character> enemies, List<Character> allies)
@@ -76,9 +83,9 @@ namespace epic8
         private void PlayerTurn(List<Character> enemies, List<Character> allies)
         {
             //Show skills of the current unit
-            for (int i=0; i < this.Skills.Count; i++)
+            for (int i=0; i < Skills.Count; i++)
             {
-                Console.WriteLine($"{i + 1}: {this.Skills[i].Name}");
+                Console.WriteLine($"{i + 1}: {Skills[i].Name}");
             }
             //User picks a skill by pressing 1-3
             int skillChoice;
@@ -87,7 +94,7 @@ namespace epic8
                 Console.Write("Choose a skill number: ");
                 string? input = Console.ReadLine();
                 //We read it as 0-2 for the list
-                if (int.TryParse(input, out skillChoice) && skillChoice >= 1 && skillChoice <= this.Skills.Count)
+                if (int.TryParse(input, out skillChoice) && skillChoice >= 1 && skillChoice <= Skills.Count)
                 {
                     skillChoice -= 1;
                     break;
@@ -98,16 +105,15 @@ namespace epic8
                 }
             }
 
-            Skill skill = this.Skills[skillChoice];
+            //The skill we chose to use
+            Skill skill = Skills[skillChoice];
 
             //List only enemies that are alive
             List<Character> aliveEnemies = enemies.Where(e => e.isAlive).ToList();
 
             if (skill.TargetType == TargetType.SingleEnemy)
             {
-
-
-
+                //List out all alive enemies
                 for (int j = 0; j < aliveEnemies.Count; j++)
                 {
                     Console.WriteLine($"{j + 1}: {aliveEnemies[j]}");
@@ -133,20 +139,47 @@ namespace epic8
                     }
                 }
 
-                Character target = aliveEnemies[targetChoice];
+                List<Character> target = [aliveEnemies[targetChoice]];
                 skill.UseSkill(this, target);
             }
             else if(skill.TargetType == TargetType.AllEnemies)
             {
-                //TODO: change Skill class to allow aoe targeting
+                skill.UseSkill(this, aliveEnemies);
             }
             else if(skill.TargetType == TargetType.SingleAlly)
             {
-                //TODO: copy enemy targeting but for allies
+                //List out all allies
+                for (int j = 0; j < allies.Count; j++)
+                {
+                    Console.WriteLine($"{j + 1}: {allies[j]}");
+                }
+
+                int targetChoice;
+
+                //Target selection input validation
+                while (true)
+                {
+                    Console.Write("Choose a target: ");
+                    string? input = Console.ReadLine();
+
+                    if (int.TryParse(input, out targetChoice) && targetChoice >= 1 && targetChoice <= allies.Count)
+                    {
+                        //read value as 0-2 for the list
+                        targetChoice -= 1;
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input. Please enter a valid target number.");
+                    }
+                }
+
+                List<Character> target = [allies[targetChoice]];
+                skill.UseSkill(this, target);
             }
             else if(skill.TargetType == TargetType.AllAllies)
             {
-                //TODO: change Skill class to allow aoe targeting
+                skill.UseSkill(this, allies);
             }
         }
 

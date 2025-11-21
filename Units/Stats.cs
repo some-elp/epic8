@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace epic8
+namespace epic8.Units
 {
     public class Stats
     {

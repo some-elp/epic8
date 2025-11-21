@@ -1,4 +1,5 @@
 ﻿using epic8.Skills;
+using epic8.Units;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +35,7 @@ namespace epic8.Calcs
             float hitMod = HitCalc.GetHitMultiplier(hitType, user);
 
             //used for skills with additional damage modifiers.
-            float extraMod = skill.ExtraModifier();
+            float extraMod = skill.ExtraModifier(user, target);
 
             float damage = (float)Math.Round((attack*skill.AtkRate+hp*skill.HpScaling+userDefense*skill.DefScaling)
                 *extraMod*adv*(1.871*skill.Power)*skill.DamageMod/(targetDefense/300+1)*hitMod);
