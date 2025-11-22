@@ -20,12 +20,12 @@ namespace epic8.Field
 
         private void InitializeCRBar()
         {
-            float maxSpeed = units.Max(u => u.CurrentStats.Speed);
+            float maxSpeed = units.Max(u => u.GetEffectiveStats().Speed);
 
             //Set starting CRMeter of units as a proportion of the highest speed.
             foreach (Character unit in units)
             {
-                unit.CRMeter = (float)unit.CurrentStats.Speed / maxSpeed;
+                unit.CRMeter = (float)unit.GetEffectiveStats().Speed / maxSpeed;
             }
         }
 
@@ -45,7 +45,7 @@ namespace epic8.Field
 
             foreach (Character character in units.Where(character => character.isAlive))
             {
-                float delta = (1.0f - character.CRMeter) / character.CurrentStats.Speed;
+                float delta = (1.0f - character.CRMeter) / character.GetEffectiveStats().Speed;
                 if(delta < minDelta)
                 {
                     minDelta = delta;
@@ -54,7 +54,7 @@ namespace epic8.Field
 
             foreach (Character character in units.Where((character) => character.isAlive))
             {
-                character.CRMeter += character.CurrentStats.Speed * minDelta;
+                character.CRMeter += character.GetEffectiveStats().Speed * minDelta;
             }
         }
 
@@ -64,7 +64,7 @@ namespace epic8.Field
             {
                 //Get list of units that are at 100% CR, sorted by speed.
                 List<Character> readyUnits = units.Where(u => u.isAlive && u.CRMeter >= 1.0f)
-                    .OrderByDescending(u => u.CurrentStats.Speed)
+                    .OrderByDescending(u => u.GetEffectiveStats().Speed)
                     .ToList();
 
                 //if there are any units at 100% CR

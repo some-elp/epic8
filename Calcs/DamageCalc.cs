@@ -19,12 +19,12 @@ namespace epic8.Calcs
              */
 
             //target's defense
-            float targetDefense = target.CurrentStats.Defense;
+            float targetDefense = target.GetEffectiveStats().Defense;
 
             //the 3 basic damage scaling stats
-            float attack = user.CurrentStats.Attack;
-            float hp = user.CurrentStats.Hp;
-            float userDefense = user.CurrentStats.Defense;
+            float attack = user.GetEffectiveStats().Attack;
+            float hp = user.GetEffectiveStats().Hp;
+            float userDefense = user.GetEffectiveStats().Defense;
 
             //1.1 or 1.0
             ElementalAdvantage advantage = ElementHelper.GetElementalAdvantage(user.Element, target.Element);
@@ -38,7 +38,7 @@ namespace epic8.Calcs
             float extraMod = skill.ExtraModifier(user, target);
 
             float damage = (float)Math.Round((attack*skill.AtkRate+hp*skill.HpScaling+userDefense*skill.DefScaling)
-                *extraMod*adv*(1.871*skill.Power)*skill.DamageMod/(targetDefense/300+1)*hitMod);
+                *extraMod*adv*(1.871*skill.Power)*skill.SkillUps/(targetDefense/300+1)*hitMod);
             return Tuple.Create(damage, hitType);
         }
     }

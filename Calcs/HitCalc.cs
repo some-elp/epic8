@@ -31,7 +31,7 @@ namespace epic8.Calcs
             if(advantage == ElementalAdvantage.Advantage)
             {
                 //Elemental Advantage + 15% crit chance
-                if (rng.NextDouble() < (user.CurrentStats.CritChance + 15.0) / 100.0)
+                if (rng.NextDouble() < (user.GetEffectiveStats().CritChance + 15.0) / 100.0)
                     return HitType.Critical;
                 //Elemental Advantage + 50% chance of crushing hit
                 if (rng.NextDouble() < 0.8)
@@ -39,7 +39,7 @@ namespace epic8.Calcs
             }
             else
             {
-                if (rng.NextDouble() < (user.CurrentStats.CritChance) / 100.0)
+                if (rng.NextDouble() < (user.GetEffectiveStats().CritChance) / 100.0)
                     return HitType.Critical;
                 if (rng.NextDouble() < 0.3)
                     return HitType.Crushing;
@@ -55,7 +55,7 @@ namespace epic8.Calcs
 
             //Critical Hit Damage determined by user's CritDamage stat
             if (hitType == HitType.Critical)
-                return user.CurrentStats.CritDamage / 100.0f;
+                return user.GetEffectiveStats().CritDamage / 100.0f;
 
             //A hit with +30% damage
             if (hitType == HitType.Crushing)

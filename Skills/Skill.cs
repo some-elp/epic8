@@ -34,7 +34,7 @@ namespace epic8.Skills
         public float DefScaling;
         public float Power;
         //This one is for skill enhancements
-        public float DamageMod;
+        public float SkillUps;
 
         //What targets is this skill hitting?
         public TargetType TargetType { get; }
@@ -51,7 +51,7 @@ namespace epic8.Skills
             HpScaling = hpScaling;
             DefScaling = defScaling;
             Power = power;
-            DamageMod = damageMod;
+            SkillUps = damageMod;
             TargetType = targetType;
             Effects = effects;
         }
@@ -59,6 +59,10 @@ namespace epic8.Skills
         public void UseSkill(Character user, List<Character> targets)
         {
             SkillContext skillContext = new SkillContext(user, targets, this);
+
+            string targetNames = string.Join(", ", targets.Select(t => t.Name));
+
+            Console.WriteLine($"{user.Name} uses {this.Name} on {targetNames}");
 
             foreach (ISkillEffect effect in Effects)
             {

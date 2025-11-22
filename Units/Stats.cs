@@ -6,9 +6,22 @@ using System.Threading.Tasks;
 
 namespace epic8.Units
 {
+
+    public enum StatType
+    {
+        Attack,
+        Defense,
+        HP,
+        Speed,
+        CritChance,
+        CritDamage,
+        Effectiveness,
+        EffectResistance,
+        DualAttackChance
+    }
     public class Stats
     {
-        public float  Attack {  get; set; }
+        public float Attack {  get; set; }
         public float Defense { get; set; }
         public float Hp { get; set; }
         public float Speed { get; set; }
@@ -31,6 +44,6 @@ namespace epic8.Units
             DualAttackChance = dualAttackChance;
         }
 
-        public Stats Clone () => (Stats)MemberwiseClone ();
+        public Stats Clone () => (Stats)MemberwiseClone();
     }
 }

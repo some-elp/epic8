@@ -27,7 +27,7 @@ namespace epic8.Skills
                     Console.WriteLine($"{skillContext.User.Name} scores a critical hit on {target.Name}!");
                 if (tuple.Item2 == HitType.Crushing)
                     Console.WriteLine($"{skillContext.User.Name} scores a crushing hit on {target.Name}!");
-                Console.WriteLine($"{skillContext.User.Name} uses {skillContext.SkillUsed.Name} on {target.Name} for {tuple.Item1} damage.");
+                Console.WriteLine($"{target.Name} has taken {tuple.Item1} damage.");
                 Console.WriteLine($"{target.Name} has {target.CurrentHP} HP remaining.");
             }
 

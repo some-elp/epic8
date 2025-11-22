@@ -1,12 +1,13 @@
-﻿using System;
+﻿using epic8.BuffsDebuffs;
+using epic8.Calcs;
+using epic8.NPCBehavior;
+using epic8.Skills;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using epic8.Calcs;
-using epic8.NPCBehavior;
-using epic8.Skills;
 
 namespace epic8.Units
 {
@@ -18,17 +19,30 @@ namespace epic8.Units
         public Element Element { get; }
         public string Role { get; }
 
+        /* Stats that you would see on the stat screen of the character
+         * Stats during the battle are represented by Character.GetEffeciveStats()
+         */
         public Stats BaseStats { get; }
-        public Stats CurrentStats { get; }
 
+        //List of 3 skills that this character can use
         public List<Skill> Skills { get; }
 
+        //maybe get rid of this? unsure. 
         public float CurrentHP { get; set; }
+
+        //where are we on the CR bar?
         public float CRMeter { get; set; } //number between 0 and 1
+
+        //is this character still alive
         public bool isAlive { get; set; } = true;
 
+        //Player vs NPC controlled
         public ControlType Control { get; }
+        //For holding the type of NPC rules that this character will use.
         public INPCController? NPCController { get; }
+
+        //List of buffs/debuffs affecting this character
+        public List<IStatusEffect> StatusEffects { get; } = [];
 
         public Character(string name, Element element, string role, Stats baseStats, Stats currentStats, List<Skill> skills, ControlType control, INPCController? npc = null)
         {
@@ -36,11 +50,110 @@ namespace epic8.Units
             Element = element;
             Role = role;
             BaseStats = baseStats;
-            CurrentStats = currentStats;
             Skills = skills;
             CurrentHP = currentStats.Hp;
             Control = control;
             NPCController = npc;
+        }
+
+        public void AddStatusEffect(IStatusEffect effect)
+        {
+
+            if (effect is StatChange sc)
+            {
+                StatusEffects.RemoveAll(e => e is StatChange other && other.Name == sc.Name);
+            }
+
+            effect.OnApply(this);
+            StatusEffects.Add(effect);
+        }
+
+        public void RemoveExpiredEffects()
+        {
+            for (int i = StatusEffects.Count - 1; i >= 0; i--)
+            {
+                if (StatusEffects[i].Duration <= 0)
+                {
+                    StatusEffects[i].OnExpire(this);
+                    StatusEffects.RemoveAt(i);
+                }
+            }
+        }
+
+        public Stats GetEffectiveStats()
+        {
+            Stats final = BaseStats.Clone();
+
+            //List of stat modifiers:
+            float attackPercent = 0f;
+            float defensePercent = 0f;
+            float hpPercent = 0f;
+            float spdPercent = 0f;
+            float critPercent = 0f;
+            float critDamagePercent = 0f;
+            float effectivenessPercent = 0f;
+            float effectResistancePercent = 0f;
+            float dualAttackChancePercent = 0f;
+
+            foreach (var eff in StatusEffects)
+            {
+                foreach (var mod in eff.GetStatModifiers())
+                {
+                    if(mod.Stat == StatType.Attack)
+                    {
+                        attackPercent += mod.PercentChange;
+                    }
+                    else if(mod.Stat == StatType.Defense)
+                    {
+                        defensePercent += mod.PercentChange;
+                    }
+                    else if(mod.Stat == StatType.HP)
+                    {
+                        hpPercent += mod.PercentChange;
+                    }
+                    else if(mod.Stat == StatType.Speed)
+                    {
+                        spdPercent += mod.PercentChange;
+                    }
+                    else if(mod.Stat == StatType.CritChance)
+                    {
+                        critPercent += mod.PercentChange;
+                    }
+                    else if(mod.Stat == StatType.CritDamage)
+                    {
+                        critDamagePercent += mod.PercentChange;
+                    }
+                    else if(mod.Stat == StatType.Effectiveness)
+                    {
+                        effectivenessPercent += mod.PercentChange;
+                    }
+                    else if(mod.Stat == StatType.EffectResistance)
+                    {
+                        effectResistancePercent += mod.PercentChange;
+                    }
+                    else if(mod.Stat == StatType.DualAttackChance)
+                    {
+                        dualAttackChancePercent += mod.PercentChange;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Stat not identifiable.");
+                    }
+                }
+
+            }
+
+            final.Attack += BaseStats.Attack * attackPercent;
+            final.Defense += BaseStats.Defense * defensePercent;
+            final.Hp += BaseStats.Hp * hpPercent;
+            final.Speed += BaseStats.Speed * spdPercent;
+            final.CritChance += critPercent;
+            final.CritDamage += critDamagePercent;
+            final.Effectiveness += effectivenessPercent;
+            final.EffectResistance += effectResistancePercent;
+            final.DualAttackChance += dualAttackChancePercent;
+
+            return final;
         }
 
         public void takeTurn(List<Character> enemies, List<Character> allies)
@@ -54,6 +167,8 @@ namespace epic8.Units
             {
                 PlayerTurn(enemies, allies);
             }
+
+            //Reduce the cooldown of all skills by 1 at the end of turn
             foreach (Skill skill in Skills)
             {
                 if(skill.CurrentCooldown > 0)
@@ -61,6 +176,14 @@ namespace epic8.Units
                     skill.CurrentCooldown -= 1;
                 }
             }
+
+            //Reduce duration of buffs and debuffs
+            foreach (var statusEffect in StatusEffects)
+            {
+                statusEffect.Duration -= 1;
+            }
+
+            RemoveExpiredEffects();
         }
 
         private void NPCTurn(List<Character> enemies, List<Character> allies)
@@ -85,7 +208,14 @@ namespace epic8.Units
             //Show skills of the current unit
             for (int i=0; i < Skills.Count; i++)
             {
-                Console.WriteLine($"{i + 1}: {Skills[i].Name}");
+                if (Skills[i].CurrentCooldown <= 0)
+                {
+                    Console.WriteLine($"{i + 1}: {Skills[i].Name}");
+                }
+                else
+                {
+                    Console.WriteLine($"{i + 1}: {Skills[i].Name} - Cooldown: {Skills[i].CurrentCooldown} ");
+                }
             }
             //User picks a skill by pressing 1-3
             int skillChoice;
@@ -185,7 +315,7 @@ namespace epic8.Units
 
         public override string ToString()
         {
-            return $"{Name} (HP, {CurrentHP}/{CurrentStats.Hp}, Speed {BaseStats.Speed}, CR {CRMeter})";
+            return $"{Name} (HP, {CurrentHP}/{GetEffectiveStats().Hp}, Speed {GetEffectiveStats().Speed}, CR {CRMeter})";
         }
 
 
