@@ -30,7 +30,7 @@ namespace epic8
             Character MLAria = new Character("Disciplinary Prefect Aria", Element.Dark, "Warrior", MLAriaStats, MLAriaStats, [], ControlType.NPC, new BasicNPC());
             Character MLArunka = new Character("Boss Arunka", Element.Light, "Knight", MLArunkaStats, MLArunkaStats, [], ControlType.NPC, new BasicNPC());
 
-            MLAria.Skills.Add(new Skill("Disciplinary Warning", "bleh", 1, 0.5f, 0.05f, 0f, 1f, 1.3f, TargetType.SingleEnemy, [new DamageEffect(), new ApplyStatChangeEffect(DecreaseSpeed)]));
+            MLAria.Skills.Add(new Skill("Disciplinary Warning", "bleh", 1, 0.5f, 0.05f, 0f, 1f, 1.3f, TargetType.SingleEnemy, [new DamageEffect(), new ApplyStatChangeEffect(DecreaseSpeed, 0.5f)]));
             MLArunka.Skills.Add(new Skill("Road Sign Smash", "blah", 1, 0.6f, 0f, 1.0f, 1f, 1.3f, TargetType.SingleEnemy, [new DamageEffect()]));
 
             List<Character> team1 = new List<Character> { MLAria };
