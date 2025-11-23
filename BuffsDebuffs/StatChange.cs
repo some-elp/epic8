@@ -16,8 +16,8 @@ namespace epic8.BuffsDebuffs
 
         private readonly List<StatModifier> modifiers;
 
-        public bool IsBuff;
-        public bool IsDebuff;
+        public bool IsBuff { get; }
+        public bool IsDebuff { get; }
 
         public StatChange(string name, int duration, bool isBuff = false, bool isDebuff = false, params StatModifier[] mods)
         {

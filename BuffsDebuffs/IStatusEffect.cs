@@ -12,9 +12,9 @@ namespace epic8.BuffsDebuffs
         //how long does this effect last
         int Duration { get; set; }
 
-        bool IsBuff { get; set; }
+        bool IsBuff { get; }
 
-        bool IsDebuff { get; set; }
+        bool IsDebuff { get; }
 
         //Effects that happen immediately when the buff/debuff is applied
         void OnApply(Character target);
