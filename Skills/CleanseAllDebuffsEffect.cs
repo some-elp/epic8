@@ -8,15 +8,12 @@ using System.Threading.Tasks;
 
 namespace epic8.Skills
 {
-    public class CleanseDebuffEffect : ISkillEffect
+    public class CleanseAllDebuffsEffect : ISkillEffect
     {
-        private readonly int _amount;
-
         public EffectTargetType TargetType { get; }
 
-        public CleanseDebuffEffect(int amount, EffectTargetType targetType)
+        public CleanseAllDebuffsEffect(EffectTargetType targetType)
         {
-            this._amount = amount;
             TargetType = targetType;
         }
 
@@ -24,9 +21,9 @@ namespace epic8.Skills
         {
             foreach (Character target in skillContext.GetTargets(TargetType))
             {
-                //get list of X debuffs on the target, should be in application order.
-                List<IStatusEffect> debuffs = target.StatusEffects.Where(e => e.IsDebuff).Take(_amount).ToList();
-                foreach(IStatusEffect debuff in debuffs)
+                //get list of all debuffs on the target
+                List<IStatusEffect> debuffs = target.StatusEffects.Where(e => e.IsDebuff).ToList();
+                foreach (IStatusEffect debuff in debuffs)
                 {
                     //not sure if we need this for debuffs, or at all honestly.
                     debuff.OnExpire(target);
