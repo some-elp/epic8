@@ -15,10 +15,11 @@ namespace epic8.Skills
         private readonly float _chance;
         public EffectTargetType TargetType { get; }
 
-        public ApplyStatChangeEffect(StatChange template, float chance = 1.0f)
+        public ApplyStatChangeEffect(StatChange template, EffectTargetType targetType, float chance = 1.0f)
         {
             _statChangeTemplate = template;
             _chance = chance;
+            TargetType = targetType;
         }
 
         public void ApplyEffect(SkillContext skillContext)

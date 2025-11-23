@@ -199,7 +199,7 @@ namespace epic8.Units
                 {
                     return;
                 }
-                skill.UseSkill(this, target);
+                skill.UseSkill(this, target, allies, enemies);
             }
         }
 
@@ -270,11 +270,11 @@ namespace epic8.Units
                 }
 
                 List<Character> target = [aliveEnemies[targetChoice]];
-                skill.UseSkill(this, target);
+                skill.UseSkill(this, target, allies, enemies);
             }
             else if(skill.TargetType == TargetType.AllEnemies)
             {
-                skill.UseSkill(this, aliveEnemies);
+                skill.UseSkill(this, aliveEnemies, allies, enemies);
             }
             else if(skill.TargetType == TargetType.SingleAlly)
             {
@@ -305,11 +305,11 @@ namespace epic8.Units
                 }
 
                 List<Character> target = [allies[targetChoice]];
-                skill.UseSkill(this, target);
+                skill.UseSkill(this, target, allies, enemies);
             }
             else if(skill.TargetType == TargetType.AllAllies)
             {
-                skill.UseSkill(this, allies);
+                skill.UseSkill(this, allies, allies, enemies);
             }
         }
 

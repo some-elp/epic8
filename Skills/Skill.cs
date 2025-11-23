@@ -56,9 +56,9 @@ namespace epic8.Skills
             Effects = effects;
         }
 
-        public void UseSkill(Character user, List<Character> targets)
+        public void UseSkill(Character user, List<Character> targets, List<Character> allies, List<Character> enemies)
         {
-            SkillContext skillContext = new SkillContext(user, targets, this);
+            SkillContext skillContext = new SkillContext(user, targets, this, allies, enemies);
 
             string targetNames = string.Join(", ", targets.Select(t => t.Name));
 
