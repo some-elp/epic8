@@ -156,6 +156,27 @@ namespace epic8.Units
             return final;
         }
 
+        public void TakeDamage(float amount)
+        {
+            /*foreach (IStatusEffect barrier in StatusEffects.Any(s => s is Barrier).ToList())
+            {
+
+            }*/
+
+            CurrentHP -= amount;
+            Console.WriteLine($"{Name} has taken {amount} damage.");
+            if( CurrentHP <= 0 )
+            {
+                isAlive = false;
+                Console.WriteLine($"{Name} was defeated.");
+            }
+            else
+            {
+                Console.WriteLine($"{Name} has {CurrentHP} HP remaining.");
+            }
+
+        }
+
         public void takeTurn(List<Character> enemies, List<Character> allies)
         {
             //Determine whether the player gets to control this unit or not.

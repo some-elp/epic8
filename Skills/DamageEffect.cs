@@ -20,15 +20,13 @@ namespace epic8.Skills
             foreach (Character target in skillContext.Targets)
             {
                 Tuple<float, HitType> tuple = DamageCalc.CalculateDamage(skillContext.User, target, skillContext.SkillUsed);
-                target.CurrentHP -= tuple.Item1;
                 if (tuple.Item2 == HitType.Miss)
                     Console.WriteLine($"{skillContext.User.Name} has missed on {target.Name}!");
                 if (tuple.Item2 == HitType.Critical)
                     Console.WriteLine($"{skillContext.User.Name} scores a critical hit on {target.Name}!");
                 if (tuple.Item2 == HitType.Crushing)
                     Console.WriteLine($"{skillContext.User.Name} scores a crushing hit on {target.Name}!");
-                Console.WriteLine($"{target.Name} has taken {tuple.Item1} damage.");
-                Console.WriteLine($"{target.Name} has {target.CurrentHP} HP remaining.");
+                target.TakeDamage(tuple.Item1);
             }
 
             skillContext.SkillUsed.CurrentCooldown = skillContext.SkillUsed.Cooldown;
