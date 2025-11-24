@@ -158,10 +158,27 @@ namespace epic8.Units
 
         public void TakeDamage(float amount)
         {
-            /*foreach (IStatusEffect barrier in StatusEffects.Any(s => s is Barrier).ToList())
+            //find barrier in the buff list
+            foreach (BarrierBuff barrier in StatusEffects.Where(b => b is BarrierBuff).ToList())
             {
+                //how much damage was absorbed by the barrier
+                float absorbed = barrier.AbsorbDamage(amount);
+                Console.WriteLine($"{this.Name}'s Barrier takes {absorbed} damage.");
 
-            }*/
+                //remove barrier from buff list if the amount of damage was greater than the barrier
+                if (barrier.Remaining <= 0)
+                {
+                    barrier.OnExpire(this);
+                    StatusEffects.Remove(barrier);
+                    Console.WriteLine($"{this.Name}'s Barrier was broken.");
+                }
+
+                //exit method if barrier takes all the damage.
+                if (amount <= 0)
+                {
+                    return;
+                }
+            }
 
             CurrentHP -= amount;
             Console.WriteLine($"{Name} has taken {amount} damage.");
@@ -244,8 +261,13 @@ namespace epic8.Units
             {
                 Console.Write("Choose a skill number: ");
                 string? input = Console.ReadLine();
-                //We read it as 0-2 for the list
-                if (int.TryParse(input, out skillChoice) && skillChoice >= 1 && skillChoice <= Skills.Count)
+                /* We read it as 0-2 for the list, can't select a number too large/small
+                 * and cannot select a skill that is on cooldown.
+                 */
+                if (int.TryParse(input, out skillChoice)
+                    && skillChoice >= 1
+                    && skillChoice <= Skills.Count
+                    && Skills[skillChoice-1].CurrentCooldown == 0)
                 {
                     skillChoice -= 1;
                     break;
@@ -338,7 +360,5 @@ namespace epic8.Units
         {
             return $"{Name} (HP, {CurrentHP}/{GetEffectiveStats().Hp}, Speed {GetEffectiveStats().Speed}, CR {CRMeter})";
         }
-
-
     }
 }

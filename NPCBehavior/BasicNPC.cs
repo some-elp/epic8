@@ -12,6 +12,20 @@ namespace epic8.NPCBehavior
     {
 
         //really basic AI for now
+
+        /*
+         * in future: 
+         * 1. ignore invincible targets (not important for now)
+         * 2. Attack target where we have elemental advantage
+         * 3. Attack lowest %hp target
+         * 4. Random target
+         * 
+         * If there are multiple units that we can hit with elemental advantage
+         * Hit the one with lowest %hp.
+         * If they are the same hp, select randomly between those targets
+         * 
+         * Future future: 40% chance to hit front target, 20% for rest
+         */
         public (Skill, List<Character> target) ChooseAction(Character user, List<Character> allies, List<Character> enemies)
         {
             Random rng = new Random();
