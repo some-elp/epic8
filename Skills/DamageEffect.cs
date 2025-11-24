@@ -12,12 +12,15 @@ namespace epic8.Skills
     {
         public EffectTargetType TargetType { get; set; }
 
-        public DamageEffect() { }
+        public DamageEffect(EffectTargetType targetType)
+        {
+            TargetType = targetType;
+        }
 
         public void ApplyEffect(SkillContext skillContext)
         {
             //item1 = damage, item2 = hitType
-            foreach (Character target in skillContext.Targets)
+            foreach (Character target in skillContext.GetTargets(TargetType))
             {
                 Tuple<float, HitType> tuple = DamageCalc.CalculateDamage(skillContext.User, target, skillContext.SkillUsed);
                 if (tuple.Item2 == HitType.Miss)

@@ -13,8 +13,6 @@ namespace epic8.Skills
 
         private readonly Func<SkillContext, Character, float> _healFormula;
 
-        private readonly float _hpMulti;
-
         public HealEffect(Func<SkillContext, Character, float> healFormula, EffectTargetType targetType)
         {
             _healFormula = healFormula;

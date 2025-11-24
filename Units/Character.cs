@@ -354,6 +354,10 @@ namespace epic8.Units
             {
                 skill.UseSkill(this, allies, allies, enemies);
             }
+            else if (skill.TargetType == TargetType.Self)
+            {
+                skill.UseSkill(this, [this], allies, enemies);
+            }
         }
 
         public override string ToString()
