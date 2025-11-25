@@ -23,7 +23,10 @@ namespace epic8.Skills
         {
             foreach (Character target in skillContext.GetTargets(TargetType))
             {
+                //Get the amount that we should heal the target for
                 float amount = (float)(Math.Round(_healFormula(skillContext, target)));
+
+                //Prevent overhealing by choosing the minimmum between our full heal and how much the target can be healed by
                 float actualHealAmount = Math.Min(amount, target.GetEffectiveStats().Hp - target.CurrentHP);
                 target.CurrentHP += actualHealAmount;
 

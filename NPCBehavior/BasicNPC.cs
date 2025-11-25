@@ -66,36 +66,43 @@ namespace epic8.NPCBehavior
 
                 if (eleAdvantage.Count > 0)
                 {
+                    //Select only among enemies we have elemental advantage against
                     return (skill, ChooseRandom(eleAdvantage));
                 }
                 else
                 {
+                    //Select among all enemies
                     return (skill, ChooseRandom(aliveEnemies));
                 }
             }
             else if(skill.TargetType == TargetType.SingleAlly)
             {
+                //For now, just pick any random ally
                 return (skill, allies[rng.Next(allies.Count)]);
             }
             else
             {
+                //This should be a skill which has TargetType.Self
                 return (skill, user);
             }
         }
 
         private Character ChooseRandom(List<Character> options)
         {
+            //Find lowest %hp target
             float lowestHpPercent = options.Min(c => c.CurrentHP / c.GetEffectiveStats().Hp);
             List<Character> targets = [];
 
             foreach (Character character in options)
             {
+                //Add all lowest %hp targets to the list
                 if(character.CurrentHP / character.GetEffectiveStats().Hp == lowestHpPercent)
                 {
                     targets.Add(character);
                 }
             }
 
+            //randomly return a lowest hp target
             return targets[rng.Next(targets.Count)];
         }
     }

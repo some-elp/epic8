@@ -40,6 +40,7 @@ namespace epic8.Skills
                         return;
                     }
                 }
+                //Clone the statmodifiers on this buff/debuff
                 StatChange clone = _statChangeTemplate.Clone(skillContext.User);
                 target.AddStatusEffect(clone);
 

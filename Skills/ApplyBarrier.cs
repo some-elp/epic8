@@ -10,6 +10,7 @@ namespace epic8.Skills
 {
     public class ApplyBarrier : ISkillEffect
     {
+        //Function that determines how the barrier amount is calculated
         private readonly Func<SkillContext, Character, float> _amountFunc;
         private readonly int _duration;
         public EffectTargetType TargetType { get; }
@@ -25,7 +26,9 @@ namespace epic8.Skills
         {
             foreach (Character target in skillContext.GetTargets(TargetType))
             {
+                //Find the value of the barrier.
                 float amount = _amountFunc(skillContext, target);
+                //Add barrier to the Character's buff/debuff list
                 target.AddStatusEffect(new BarrierBuff(_duration, amount, skillContext.User));
             }
         }

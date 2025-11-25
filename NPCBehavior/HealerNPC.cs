@@ -75,10 +75,12 @@ namespace epic8.NPCBehavior
 
             if (eleAdvantage.Count > 0)
             {
+                //Select only among enemies we have advantage against
                 return (skill, ChooseRandom(eleAdvantage));
             }
             else
             {
+                //Otherwise, select among all enemies
                 return (skill, ChooseRandom(aliveEnemies));
             }
 
@@ -86,17 +88,20 @@ namespace epic8.NPCBehavior
 
         private Character ChooseRandom(List<Character> options)
         {
+            //Find lowest %hp among targets
             float lowestHpPercent = options.Min(c => c.CurrentHP / c.GetEffectiveStats().Hp);
             List<Character> targets = [];
 
             foreach (Character character in options)
             {
+                //Add all potential targets with lowest %hp to a list
                 if (character.CurrentHP / character.GetEffectiveStats().Hp == lowestHpPercent)
                 {
                     targets.Add(character);
                 }
             }
 
+            //Return a random target among the possibilities
             return targets[rng.Next(targets.Count)];
         }
 
@@ -117,17 +122,23 @@ namespace epic8.NPCBehavior
 
         private bool AnyAllyBelowThreshold(List<Character> allies, float threshold)
         {
+            //Do we have any allies with %HP below the given threshold?
             return allies.Any(a => a.isAlive &&
                  (a.CurrentHP / a.GetEffectiveStats().Hp) < threshold);
         }
 
         private Character ChooseHealingTarget(Skill healingSkill, List<Character> allies)
         {
+            //Ignore defeated allies.
             List<Character> aliveAllies = allies.Where(a => a.isAlive).ToList();
 
+            //Find the lowest %HP among allies
             float lowestHpPercent = aliveAllies.Min(a => a.CurrentHP / a.GetEffectiveStats().Hp);
-            var lowest = aliveAllies.Where(a => (a.CurrentHP / a.GetEffectiveStats().Hp) == lowestHpPercent).ToList();
 
+            //Get a list of allies who share the lowest %HP
+            List<Character> lowest = aliveAllies.Where(a => (a.CurrentHP / a.GetEffectiveStats().Hp) == lowestHpPercent).ToList();
+
+            //Return a random lowest hp ally
             return lowest[rng.Next(lowest.Count)];
         }
     }

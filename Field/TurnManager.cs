@@ -33,7 +33,7 @@ namespace epic8.Field
         {
             Console.WriteLine("--- Current Timeline ---");
             Console.WriteLine($"--- Turn {_turnCount} ---");
-            foreach (Character unit in units)
+            foreach (Character unit in units.Where(character => character.isAlive))
             {
                 Console.WriteLine($" - {unit}");
             }
@@ -45,6 +45,7 @@ namespace epic8.Field
 
             foreach (Character character in units.Where(character => character.isAlive))
             {
+                //Find the shortest "time" a unit needs to travel to 100%
                 float delta = (1.0f - character.CRMeter) / character.GetEffectiveStats().Speed;
                 if(delta < minDelta)
                 {
@@ -54,6 +55,7 @@ namespace epic8.Field
 
             foreach (Character character in units.Where((character) => character.isAlive))
             {
+                //Advance all characters for the given amount of "time"
                 character.CRMeter += character.GetEffectiveStats().Speed * minDelta;
             }
         }

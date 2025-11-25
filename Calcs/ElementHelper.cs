@@ -10,6 +10,7 @@ namespace epic8.Calcs
     public enum ElementalAdvantage { Advantage, Neutral, Disadvantage}
     public static class ElementHelper
     {
+        //Do we have elemental advantage or not?
         public static ElementalAdvantage GetElementalAdvantage(Element user, Element target)
         {
             if ((user == Element.Fire && target == Element.Earth) ||
@@ -26,6 +27,7 @@ namespace epic8.Calcs
             return ElementalAdvantage.Neutral;
         }
 
+        //If we have elemental advantage, we deal 10% more damage.
         public static float GetEleAdvantageMultiplier(ElementalAdvantage advantage)
         {
             if (advantage == ElementalAdvantage.Advantage)

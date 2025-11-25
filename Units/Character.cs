@@ -58,7 +58,7 @@ namespace epic8.Units
 
         public void AddStatusEffect(IStatusEffect effect)
         {
-
+            //Prevent duplicate StatChange effects
             if (effect is StatChange sc)
             {
                 StatusEffects.RemoveAll(e => e is StatChange other && other.Name == sc.Name);
@@ -70,6 +70,7 @@ namespace epic8.Units
 
         public void RemoveExpiredEffects()
         {
+            //Remove all effects that are 0 duration
             for (int i = StatusEffects.Count - 1; i >= 0; i--)
             {
                 if (StatusEffects[i].Duration <= 0)
@@ -95,6 +96,7 @@ namespace epic8.Units
             float effectResistancePercent = 0f;
             float dualAttackChancePercent = 0f;
 
+            //Go through our list of statuseffects, and get the total stat changes (additive)
             foreach (var eff in StatusEffects)
             {
                 foreach (var mod in eff.GetStatModifiers())
@@ -143,6 +145,7 @@ namespace epic8.Units
 
             }
 
+            //Apply our stat changes
             final.Attack += (float)(Math.Round(BaseStats.Attack * attackPercent));
             final.Defense += (float)(Math.Round(BaseStats.Defense * defensePercent));
             final.Hp += (float)(Math.Round(BaseStats.Hp * hpPercent));
@@ -153,6 +156,7 @@ namespace epic8.Units
             final.EffectResistance += effectResistancePercent;
             final.DualAttackChance += dualAttackChancePercent;
 
+            //Return our current stats.
             return final;
         }
 
@@ -182,8 +186,11 @@ namespace epic8.Units
                 }
             }
 
+            //Take all damage not absorbed by barrier.
             CurrentHP -= amount;
             Console.WriteLine($"{Name} has taken {amount} damage.");
+            
+            //Character is defeated if we have 0 or less hp
             if( CurrentHP <= 0 )
             {
                 isAlive = false;
@@ -234,12 +241,14 @@ namespace epic8.Units
 
         private void NPCTurn(List<Character> allies, List<Character> enemies)
         {
+            //Shouldn't happen, All Characters should have their behavior specified
             if (NPCController == null)
             {
                 Console.WriteLine($"{Name} has no AI behavior, skipping turn");
             }
             else
             {
+                //Determine what skill and target the NPC is choosing
                 var (skill, target) = NPCController.ChooseAction(this, allies, enemies);
                 if (target == null)
                 {
@@ -356,13 +365,14 @@ namespace epic8.Units
             }
             else if (skill.TargetType == TargetType.Self)
             {
+                //Don't need the user to pick a target in this case.
                 skill.UseSkill(this, this, allies, enemies);
             }
         }
 
         public override string ToString()
         {
-            return $"{Name} (HP, {CurrentHP}/{GetEffectiveStats().Hp}, Speed {GetEffectiveStats().Speed}, CR {CRMeter*100}%, Status: {string.Join(", ", StatusEffects.Select(s => s.Name))})";
+            return $"{Name} (HP, {CurrentHP}/{GetEffectiveStats().Hp}, Speed {GetEffectiveStats().Speed}, CR {CRMeter*100}%, Status: {string.Join(", ", StatusEffects.Select(s => s.ToString()))})";
         }
     }
 }

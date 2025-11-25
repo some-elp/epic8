@@ -44,5 +44,10 @@ namespace epic8.BuffsDebuffs
             copy.AppliedBy = appliedBy;
             return copy;
         }
+
+        public override string ToString()
+        {
+            return $"{Name} - {Duration}";
+        }
     }
 }

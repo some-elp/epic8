@@ -22,6 +22,7 @@ namespace epic8.Skills
             //item1 = damage, item2 = hitType
             foreach (Character target in skillContext.GetTargets(TargetType))
             {
+                //Grab how much damage we did to this target, and what kind of hit we made
                 Tuple<float, HitType> tuple = DamageCalc.CalculateDamage(skillContext.User, target, skillContext.SkillUsed);
                 if (tuple.Item2 == HitType.Miss)
                     Console.WriteLine($"{skillContext.User.Name} has missed on {target.Name}!");

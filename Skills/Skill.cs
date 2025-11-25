@@ -56,17 +56,22 @@ namespace epic8.Skills
 
         public void UseSkill(Character user, Character target, List<Character> allies, List<Character> enemies)
         {
+            //useful to pass information around
             SkillContext skillContext = new SkillContext(user, target, this, allies, enemies);
 
             Console.WriteLine($"{user.Name} uses {this.Name} targeting {target.Name}");
 
+            //Go through list of this skill's effects and apply them in order
             foreach (ISkillEffect effect in Effects)
             {
                 effect.ApplyEffect(skillContext);
             }
+
+            //We have used this skill, so put it on cooldown.
             CurrentCooldown = Cooldown;
         }
 
+        //Remove this later
         public float ExtraModifier(Character user, Character target)
         {
             return 1.0f;

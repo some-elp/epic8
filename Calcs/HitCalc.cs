@@ -39,11 +39,14 @@ namespace epic8.Calcs
             }
             else
             {
+                //Roll our crit chance for a critical hit
                 if (rng.NextDouble() < (user.GetEffectiveStats().CritChance) / 100.0)
                     return HitType.Critical;
+                //If we didn't make a crit, we can check to see if we made a crushing hit
                 if (rng.NextDouble() < 0.3)
                     return HitType.Crushing;
             }
+            //If none of these happened, it's a normal hit
             return HitType.Normal;
         }
 

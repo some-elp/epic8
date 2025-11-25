@@ -27,6 +27,7 @@ namespace epic8.Skills
 
         public List<Character> GetTargets(EffectTargetType effectTargetType)
         {
+            //Return the proper targets for this skill effect (Can be different from skill's target)
             switch (effectTargetType)
             {
                 case EffectTargetType.Self:
