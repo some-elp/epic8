@@ -10,7 +10,7 @@ namespace epic8.Calcs
 {
     public static class DamageCalc
     {
-        public static Tuple<float, HitType> CalculateDamage(Character user, Character target, Skill skill)
+        public static Tuple<float, HitType> CalculateDamage(Character user, Character target, DamageEffect dmgEffect)
         {
 
             /*
@@ -35,11 +35,11 @@ namespace epic8.Calcs
             float hitMod = HitCalc.GetHitMultiplier(hitType, user);
 
             //used for skills with additional damage modifiers.
-            float extraMod = skill.ExtraModifier(user, target);
+            float extraMod = dmgEffect.UniqueDamageModFormula(user, target);
 
             //The actual damage formula
-            float damage = (float)Math.Round((attack*skill.AtkRate+hp*skill.HpScaling+userDefense*skill.DefScaling)
-                *extraMod*adv*(1.871*skill.Power)*skill.SkillUps/(targetDefense/300+1)*hitMod);
+            float damage = (float)Math.Round((attack*dmgEffect.AtkRate+hp*dmgEffect.HpScaling+userDefense*dmgEffect.DefScaling)
+                *extraMod*adv*(1.871*dmgEffect.Power)*dmgEffect.SkillUps/(targetDefense/300+1)*hitMod);
 
             //return the damage that was taken, and what kind of hit was made.
             return Tuple.Create(damage, hitType);

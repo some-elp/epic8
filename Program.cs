@@ -52,30 +52,30 @@ namespace epic8
             Character Aither = new Character("Aither", Element.Ice, "Soulweaver", AitherStats, [], ControlType.NPC, new HealerNPC(0.8f, 0.6f));
             Character Elson = new Character("Elson", Element.Light, "Soulweaver", ElsonStats, [], ControlType.NPC, new BasicNPC());
 
-            MLAria.Skills.Add(new Skill("Disciplinary Warning", "bleh", 1, 0.5f, 0.05f, 0f, 1f, 1.3f, TargetType.SingleEnemy,
-                [new DamageEffect(EffectTargetType.SkillTarget)]));
-            MLArunka.Skills.Add(new Skill("Road Sign Smash", "blah", 1, 0.6f, 0f, 1.0f, 1f, 1.3f, TargetType.SingleEnemy,
-                [new DamageEffect(EffectTargetType.SkillTarget)]));
+            MLAria.Skills.Add(new Skill("Disciplinary Warning", "bleh", 1, TargetType.SingleEnemy,
+                [new DamageEffect(0.5f, 0.05f, 0f, 1f, 1.3f, (u,t) => 1.0f, EffectTargetType.SkillTarget)]));
+            MLArunka.Skills.Add(new Skill("Road Sign Smash", "blah", 1, TargetType.SingleEnemy,
+                [new DamageEffect(0.6f, 0f, 1.0f, 1f, 1.3f, (u,t) => 1.0f,EffectTargetType.SkillTarget)]));
 
             //Aither S1, S2, and S3
-            Aither.Skills.Add(new Skill("Whispering Spirit", "blah", 1, 1f,0f, 0f, 1.05f, 1.25f, TargetType.SingleEnemy,
-                [new DamageEffect (EffectTargetType.SkillTarget),
+            Aither.Skills.Add(new Skill("Whispering Spirit", "blah", 1, TargetType.SingleEnemy,
+                [new DamageEffect (1f,0f, 0f, 1.05f, 1.25f, (u,t) => 1.0f, EffectTargetType.SkillTarget),
                 new ApplyStatChangeEffect(DecreaseSpeed, EffectTargetType.SkillTarget, 0.5f)]));
-            Aither.Skills.Add(new Skill("Guard", "blah", 2, 0f, 0f, 0f, 0f, 0f, TargetType.SingleAlly,
+            Aither.Skills.Add(new Skill("Guard", "blah", 2, TargetType.SingleAlly,
                 [new HealEffect((ctx, t) => t.GetEffectiveStats().Hp * 0.19f * 1.3f, EffectTargetType.SkillTarget),
                 new CRPushEffect(0.2f, EffectTargetType.Self)]));
-            Aither.Skills.Add(new Skill("Spirit's Call", "blah", 3, 0f, 0f, 0f, 0f, 0f, TargetType.SingleAlly,
+            Aither.Skills.Add(new Skill("Spirit's Call", "blah", 3, TargetType.SingleAlly,
                 [new HealEffect((ctx, t) => t.GetEffectiveStats().Hp * 0.15f * 1.4f, EffectTargetType.AllAllies),
                 new ApplyBarrier((ctx, t) => t.GetEffectiveStats().Hp * 0.15f, 2, EffectTargetType.AllAllies)]));
 
             //Start here tomorrow with Elson skills, need to test, also change NPCs to handle ally targeting.
-            Elson.Skills.Add(new Skill("Heavy Strike", "blah", 1, 0.9f, 0f, 0f, 1f, 1.3f, TargetType.SingleEnemy,
-                [new DamageEffect(EffectTargetType.SkillTarget),
+            Elson.Skills.Add(new Skill("Heavy Strike", "blah", 1, TargetType.SingleEnemy,
+                [new DamageEffect(0.9f, 0f, 0f, 1f, 1.3f, (u, t) => 1.0f, EffectTargetType.SkillTarget),
                 new ApplyStatChangeEffect(DecreaseAttack, EffectTargetType.SkillTarget, 0.75f)]));
-            Elson.Skills.Add(new Skill("Meteor Shower", "blah", 3, 0.7f, 0f, 0f, 0.9f, 1.4f, TargetType.SingleEnemy,
-                [new DamageEffect(EffectTargetType.AllEnemies),
+            Elson.Skills.Add(new Skill("Meteor Shower", "blah", 3, TargetType.SingleEnemy,
+                [new DamageEffect(0.7f, 0f, 0f, 0.9f, 1.4f, (u, t) => 1.0f, EffectTargetType.AllEnemies),
                 new HealEffect((ctx, t) => t.GetEffectiveStats().Hp * 0.15f * 1.3f, EffectTargetType.AllAllies)]));
-            Elson.Skills.Add(new Skill("Light's Protection", "blah", 4, 0f, 0f, 0f, 0f, 0f, TargetType.SingleAlly,
+            Elson.Skills.Add(new Skill("Light's Protection", "blah", 4, TargetType.SingleAlly,
                 [new HealEffect((ctx, t) => t.GetEffectiveStats().Hp * 0.1f, EffectTargetType.AllAllies),
                 new ApplyStatChangeEffect(IncreaseAttack, EffectTargetType.AllAllies),
                 new ApplyStatChangeEffect(IncreaseDefense, EffectTargetType.AllAllies)]));

@@ -12,8 +12,25 @@ namespace epic8.Skills
     {
         public EffectTargetType TargetType { get; set; }
 
-        public DamageEffect(EffectTargetType targetType)
+        public Func<Character, Character, float> UniqueDamageModFormula { get; }
+
+        //Damage multipliers
+        public float AtkRate;
+        public float HpScaling;
+        public float DefScaling;
+        public float Power;
+        //This one is for skill enhancements
+        public float SkillUps;
+
+
+        public DamageEffect(float atkRate, float hpScaling, float defScaling, float power, float skillUps, Func<Character, Character, float> uniqueDamageMod, EffectTargetType targetType)
         {
+            AtkRate = atkRate;
+            HpScaling = hpScaling;
+            DefScaling = defScaling;
+            Power = power;
+            SkillUps = skillUps;
+            UniqueDamageModFormula = uniqueDamageMod;
             TargetType = targetType;
         }
 
@@ -23,7 +40,7 @@ namespace epic8.Skills
             foreach (Character target in skillContext.GetTargets(TargetType))
             {
                 //Grab how much damage we did to this target, and what kind of hit we made
-                Tuple<float, HitType> tuple = DamageCalc.CalculateDamage(skillContext.User, target, skillContext.SkillUsed);
+                Tuple<float, HitType> tuple = DamageCalc.CalculateDamage(skillContext.User, target, this);
                 if (tuple.Item2 == HitType.Miss)
                     Console.WriteLine($"{skillContext.User.Name} has missed on {target.Name}!");
                 if (tuple.Item2 == HitType.Critical)
