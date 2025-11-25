@@ -26,7 +26,7 @@ namespace epic8.Skills
             foreach (Character target in skillContext.GetTargets(TargetType))
             {
                 float amount = _amountFunc(skillContext, target);
-                target.AddStatusEffect(new BarrierBuff(_duration, amount));
+                target.AddStatusEffect(new BarrierBuff(_duration, amount, skillContext.User));
             }
         }
 

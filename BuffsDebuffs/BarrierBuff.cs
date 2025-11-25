@@ -19,10 +19,13 @@ namespace epic8.BuffsDebuffs
 
         public string Name { get; } = "Barrier";
 
-        public BarrierBuff(int duration, float amount)
+        public Character AppliedBy { get; private set; }
+        public bool AppliedThisTurn { get; set; } = true;
+        public BarrierBuff(int duration, float amount, Character appliedBy)
         {
             Duration = duration;
             Remaining = amount;
+            AppliedBy = appliedBy;
         }
 
         public float AbsorbDamage(float damage)

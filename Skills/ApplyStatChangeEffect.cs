@@ -40,14 +40,9 @@ namespace epic8.Skills
                         return;
                     }
                 }
-                StatChange clone = new StatChange(
-                    _statChangeTemplate.Name,
-                    _statChangeTemplate.Duration,
-                    _statChangeTemplate.IsBuff,
-                    _statChangeTemplate.IsDebuff,
-                    _statChangeTemplate.GetStatModifiers().ToArray());
-
+                StatChange clone = _statChangeTemplate.Clone(skillContext.User);
                 target.AddStatusEffect(clone);
+
                 Console.WriteLine($"{target.Name} has been affected by {clone.Name} for {clone.Duration} turns.");
             }
 

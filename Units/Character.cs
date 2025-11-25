@@ -220,6 +220,12 @@ namespace epic8.Units
             //Reduce duration of buffs and debuffs
             foreach (var statusEffect in StatusEffects)
             {
+                if(statusEffect.AppliedThisTurn && statusEffect.AppliedBy == this)
+                {
+                    statusEffect.AppliedThisTurn = false;
+                    continue;
+                }
+
                 statusEffect.Duration -= 1;
             }
 
@@ -356,7 +362,7 @@ namespace epic8.Units
 
         public override string ToString()
         {
-            return $"{Name} (HP, {CurrentHP}/{GetEffectiveStats().Hp}, Speed {GetEffectiveStats().Speed}, CR {CRMeter*100}%)";
+            return $"{Name} (HP, {CurrentHP}/{GetEffectiveStats().Hp}, Speed {GetEffectiveStats().Speed}, CR {CRMeter*100}%, Status: {string.Join(", ", StatusEffects.Select(s => s.Name))})";
         }
     }
 }

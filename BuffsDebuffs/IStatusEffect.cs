@@ -18,6 +18,10 @@ namespace epic8.BuffsDebuffs
 
         string Name { get; }
 
+        Character AppliedBy { get; }
+
+        bool AppliedThisTurn { get; set; }
+
         //Effects that happen immediately when the buff/debuff is applied
         void OnApply(Character target);
 
