@@ -31,6 +31,8 @@ namespace epic8.Skills
                     //not sure if we need this for debuffs, or at all honestly.
                     debuff.OnExpire(target);
 
+                    Console.WriteLine($"{debuff.Name} was cleansed from {target.Name}");
+
                     //remove the debuff.
                     target.StatusEffects.Remove(debuff);
                 }

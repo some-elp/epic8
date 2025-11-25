@@ -25,10 +25,13 @@ namespace epic8.Skills
             {
                 //get list of X buffs on the target, should be in application order.
                 List<IStatusEffect> buffs = target.StatusEffects.Where(e => e.IsBuff).Take(_amount).ToList();
+
                 foreach (IStatusEffect buff in buffs)
                 {
                     //not sure if we need this for debuffs, or at all honestly.
                     buff.OnExpire(target);
+
+                    Console.WriteLine($"{buff.Name} was dispelled from {target.Name}");
 
                     //remove the debuff.
                     target.StatusEffects.Remove(buff);

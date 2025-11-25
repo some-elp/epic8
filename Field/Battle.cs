@@ -55,7 +55,7 @@ namespace epic8.Field
                 }
 
                 //Acting unit takes its turn.
-                acting.takeTurn(enemies, allies);
+                acting.takeTurn(allies, enemies);
 
                 //Check to see if any units have died after this turn.
                 foreach ( Character unit in _team1)

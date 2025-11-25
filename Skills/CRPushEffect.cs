@@ -13,9 +13,10 @@ namespace epic8.Skills
 
         public EffectTargetType TargetType { get; }
 
-        public CRPushEffect(float amount)
+        public CRPushEffect(float amount, EffectTargetType targetType)
         {
             _amount = Math.Clamp(amount, 0f, 1.0f);
+            TargetType = targetType;
         }
 
         public void ApplyEffect(SkillContext skillContext)
@@ -24,7 +25,7 @@ namespace epic8.Skills
             {
                 target.CRMeter += _amount;
 
-                Console.WriteLine($"{target} has been CR Pushed by {_amount}");
+                Console.WriteLine($"{target} has been CR Pushed by {_amount*100f}%");
             }
         }
     }

@@ -23,10 +23,11 @@ namespace epic8.Skills
         {
             foreach (Character target in skillContext.GetTargets(TargetType))
             {
-                float amount = _healFormula(skillContext, target);
-                target.CurrentHP += amount;
-                target.CurrentHP = Math.Max(target.CurrentHP, target.GetEffectiveStats().Hp);
-                Console.WriteLine($"{target} was healed for {amount}");
+                float amount = (float)(Math.Round(_healFormula(skillContext, target)));
+                float actualHealAmount = Math.Min(amount, target.GetEffectiveStats().Hp - target.CurrentHP);
+                target.CurrentHP += actualHealAmount;
+
+                Console.WriteLine($"{target.Name} was healed for {actualHealAmount}");
             }
         }
     }

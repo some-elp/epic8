@@ -16,6 +16,8 @@ namespace epic8.BuffsDebuffs
 
         bool IsDebuff { get; }
 
+        string Name { get; }
+
         //Effects that happen immediately when the buff/debuff is applied
         void OnApply(Character target);
 

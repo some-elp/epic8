@@ -44,14 +44,14 @@ namespace epic8.Units
         //List of buffs/debuffs affecting this character
         public List<IStatusEffect> StatusEffects { get; } = [];
 
-        public Character(string name, Element element, string role, Stats baseStats, Stats currentStats, List<Skill> skills, ControlType control, INPCController? npc = null)
+        public Character(string name, Element element, string role, Stats baseStats, List<Skill> skills, ControlType control, INPCController? npc = null)
         {
             Name = name;
             Element = element;
             Role = role;
             BaseStats = baseStats;
             Skills = skills;
-            CurrentHP = currentStats.Hp;
+            CurrentHP = baseStats.Hp;
             Control = control;
             NPCController = npc;
         }
@@ -143,10 +143,10 @@ namespace epic8.Units
 
             }
 
-            final.Attack += BaseStats.Attack * attackPercent;
-            final.Defense += BaseStats.Defense * defensePercent;
-            final.Hp += BaseStats.Hp * hpPercent;
-            final.Speed += BaseStats.Speed * spdPercent;
+            final.Attack += (float)(Math.Round(BaseStats.Attack * attackPercent));
+            final.Defense += (float)(Math.Round(BaseStats.Defense * defensePercent));
+            final.Hp += (float)(Math.Round(BaseStats.Hp * hpPercent));
+            final.Speed += (float)(Math.Round(BaseStats.Speed * spdPercent));
             final.CritChance += critPercent;
             final.CritDamage += critDamagePercent;
             final.Effectiveness += effectivenessPercent;
@@ -164,6 +164,8 @@ namespace epic8.Units
                 //how much damage was absorbed by the barrier
                 float absorbed = barrier.AbsorbDamage(amount);
                 Console.WriteLine($"{this.Name}'s Barrier takes {absorbed} damage.");
+
+                amount -= absorbed;
 
                 //remove barrier from buff list if the amount of damage was greater than the barrier
                 if (barrier.Remaining <= 0)
@@ -194,16 +196,16 @@ namespace epic8.Units
 
         }
 
-        public void takeTurn(List<Character> enemies, List<Character> allies)
+        public void takeTurn(List<Character> allies, List<Character> enemies)
         {
             //Determine whether the player gets to control this unit or not.
             if(Control == ControlType.NPC)
             {
-                NPCTurn(enemies, allies);
+                NPCTurn(allies, enemies);
             }
             else
             {
-                PlayerTurn(enemies, allies);
+                PlayerTurn(allies, enemies);
             }
 
             //Reduce the cooldown of all skills by 1 at the end of turn
@@ -224,7 +226,7 @@ namespace epic8.Units
             RemoveExpiredEffects();
         }
 
-        private void NPCTurn(List<Character> enemies, List<Character> allies)
+        private void NPCTurn(List<Character> allies, List<Character> enemies)
         {
             if (NPCController == null)
             {
@@ -241,7 +243,7 @@ namespace epic8.Units
             }
         }
 
-        private void PlayerTurn(List<Character> enemies, List<Character> allies)
+        private void PlayerTurn(List<Character> allies, List<Character> enemies)
         {
             //Show skills of the current unit
             for (int i=0; i < Skills.Count; i++)
@@ -362,7 +364,7 @@ namespace epic8.Units
 
         public override string ToString()
         {
-            return $"{Name} (HP, {CurrentHP}/{GetEffectiveStats().Hp}, Speed {GetEffectiveStats().Speed}, CR {CRMeter})";
+            return $"{Name} (HP, {CurrentHP}/{GetEffectiveStats().Hp}, Speed {GetEffectiveStats().Speed}, CR {CRMeter*100}%)";
         }
     }
 }
