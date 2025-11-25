@@ -12,9 +12,7 @@ namespace epic8.Skills
     public enum TargetType
     {
         SingleEnemy,
-        AllEnemies,
         SingleAlly,
-        AllAllies,
         Self
     }
 
@@ -56,13 +54,11 @@ namespace epic8.Skills
             Effects = effects;
         }
 
-        public void UseSkill(Character user, List<Character> targets, List<Character> allies, List<Character> enemies)
+        public void UseSkill(Character user, Character target, List<Character> allies, List<Character> enemies)
         {
-            SkillContext skillContext = new SkillContext(user, targets, this, allies, enemies);
+            SkillContext skillContext = new SkillContext(user, target, this, allies, enemies);
 
-            string targetNames = string.Join(", ", targets.Select(t => t.Name));
-
-            Console.WriteLine($"{user.Name} uses {this.Name} on {targetNames}");
+            Console.WriteLine($"{user.Name} uses {this.Name} targeting {target.Name}");
 
             foreach (ISkillEffect effect in Effects)
             {

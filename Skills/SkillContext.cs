@@ -10,16 +10,16 @@ namespace epic8.Skills
     public class SkillContext
     {
         public Character User { get; }
-        public List<Character> Targets { get; }
+        public Character Target { get; }
         public Skill SkillUsed { get; }
 
         public List<Character> Allies { get; }
         public List<Character> Enemies { get; }
 
-        public SkillContext(Character user, List<Character> targets, Skill skillUsed, List<Character> allies, List<Character> enemies)
+        public SkillContext(Character user, Character target, Skill skillUsed, List<Character> allies, List<Character> enemies)
         {
             User = user;
-            Targets = targets;
+            Target = target;
             SkillUsed = skillUsed;
             Allies = allies;
             Enemies = enemies;
@@ -32,7 +32,7 @@ namespace epic8.Skills
                 case EffectTargetType.Self:
                     return new List<Character> { User };
                 case EffectTargetType.SkillTargets:
-                    return Targets;
+                    return [Target];
                 case EffectTargetType.AllAllies:
                     return Allies.Where(a => a.isAlive).ToList();
                 case EffectTargetType.AllEnemies:

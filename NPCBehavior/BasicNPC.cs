@@ -30,7 +30,7 @@ namespace epic8.NPCBehavior
 
         private readonly Random rng = new Random();
 
-        public (Skill, List<Character> target) ChooseAction(Character user, List<Character> allies, List<Character> enemies)
+        public (Skill, Character target) ChooseAction(Character user, List<Character> allies, List<Character> enemies)
         {
             //just pick the first skill
             Skill skill = user.Skills.First();
@@ -74,7 +74,7 @@ namespace epic8.NPCBehavior
 
         }
 
-        private List<Character> ChooseRandom(List<Character> options)
+        private Character ChooseRandom(List<Character> options)
         {
             float lowestHpPercent = options.Min(c => c.CurrentHP / c.GetEffectiveStats().Hp);
             List<Character> targets = [];
@@ -87,7 +87,7 @@ namespace epic8.NPCBehavior
                 }
             }
 
-            return [targets[rng.Next(targets.Count)]];
+            return targets[rng.Next(targets.Count)];
         }
     }
 }

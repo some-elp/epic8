@@ -10,6 +10,6 @@ namespace epic8.NPCBehavior
 {
     public interface INPCController
     {
-        (Skill, List<Character> target) ChooseAction(Character user, List<Character> allies, List<Character> enemies);
+        (Skill, Character target) ChooseAction(Character user, List<Character> allies, List<Character> enemies);
     }
 }

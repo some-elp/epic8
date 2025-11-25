@@ -42,7 +42,7 @@ namespace epic8
             Aither.Skills.Add(new Skill("Guard", "blah", 2, 0f, 0f, 0f, 0f, 0f, TargetType.SingleAlly,
                 [new HealEffect((ctx, t) => t.GetEffectiveStats().Hp * 0.19f * 1.3f, EffectTargetType.SkillTargets),
                 new CRPushEffect(0.2f, EffectTargetType.Self)]));
-            Aither.Skills.Add(new Skill("Spirit's Call", "blah", 3, 0f, 0f, 0f, 0f, 0f, TargetType.AllAllies,
+            Aither.Skills.Add(new Skill("Spirit's Call", "blah", 3, 0f, 0f, 0f, 0f, 0f, TargetType.SingleAlly,
                 [new HealEffect((ctx, t) => t.GetEffectiveStats().Hp * 0.15f * 1.4f, EffectTargetType.AllAllies),
                 new ApplyBarrier((ctx, t) => t.GetEffectiveStats().Hp * 0.15f, 2, EffectTargetType.AllAllies)]));
 

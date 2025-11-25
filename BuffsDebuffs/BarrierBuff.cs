@@ -17,7 +17,7 @@ namespace epic8.BuffsDebuffs
 
         public float Remaining { get; set; }
 
-        public string name = "Barrier";
+        public string Name { get; } = "Barrier";
 
         public BarrierBuff(int duration, float amount)
         {

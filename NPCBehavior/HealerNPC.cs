@@ -41,7 +41,7 @@ namespace epic8.NPCBehavior
             _s3Threshold = s3Threshold;
         }
 
-        public (Skill, List<Character> target) ChooseAction(Character user, List<Character> allies, List<Character> enemies)
+        public (Skill, Character target) ChooseAction(Character user, List<Character> allies, List<Character> enemies)
         {
             //See if we are healing anyone.
             Skill? healSkill = ChooseHealingSkill(user, allies);
@@ -49,8 +49,8 @@ namespace epic8.NPCBehavior
             //Are we using a healing skill?
             if(healSkill != null)
             {
-                List<Character> healTargets = ChooseHealingTarget(healSkill, allies);
-                return (healSkill,  healTargets);
+                Character healTarget = ChooseHealingTarget(healSkill, allies);
+                return (healSkill,  healTarget);
             }
 
 
@@ -84,7 +84,7 @@ namespace epic8.NPCBehavior
 
         }
 
-        private List<Character> ChooseRandom(List<Character> options)
+        private Character ChooseRandom(List<Character> options)
         {
             float lowestHpPercent = options.Min(c => c.CurrentHP / c.GetEffectiveStats().Hp);
             List<Character> targets = [];
@@ -97,7 +97,7 @@ namespace epic8.NPCBehavior
                 }
             }
 
-            return [targets[rng.Next(targets.Count)]];
+            return targets[rng.Next(targets.Count)];
         }
 
         private Skill? ChooseHealingSkill(Character user, List<Character> allies)
@@ -121,17 +121,14 @@ namespace epic8.NPCBehavior
                  (a.CurrentHP / a.GetEffectiveStats().Hp) < threshold);
         }
 
-        private List<Character> ChooseHealingTarget(Skill healingSkill, List<Character> allies)
+        private Character ChooseHealingTarget(Skill healingSkill, List<Character> allies)
         {
             List<Character> aliveAllies = allies.Where(a => a.isAlive).ToList();
-
-            if (healingSkill.TargetType == TargetType.AllAllies)
-                return aliveAllies;
 
             float lowestHpPercent = aliveAllies.Min(a => a.CurrentHP / a.GetEffectiveStats().Hp);
             var lowest = aliveAllies.Where(a => (a.CurrentHP / a.GetEffectiveStats().Hp) == lowestHpPercent).ToList();
 
-            return new List<Character> { lowest[rng.Next(lowest.Count)] };
+            return lowest[rng.Next(lowest.Count)];
         }
     }
 }

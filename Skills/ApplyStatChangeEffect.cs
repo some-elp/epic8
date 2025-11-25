@@ -25,7 +25,7 @@ namespace epic8.Skills
         public void ApplyEffect(SkillContext skillContext)
         {
 
-            foreach (Character target  in skillContext.Targets)
+            foreach (Character target  in skillContext.GetTargets(TargetType))
             {
                 if (_statChangeTemplate.IsDebuff)
                 {
