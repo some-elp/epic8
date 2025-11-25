@@ -31,7 +31,7 @@ namespace epic8.Skills
             {
                 case EffectTargetType.Self:
                     return new List<Character> { User };
-                case EffectTargetType.SkillTargets:
+                case EffectTargetType.SkillTarget:
                     return [Target];
                 case EffectTargetType.AllAllies:
                     return Allies.Where(a => a.isAlive).ToList();

@@ -46,32 +46,41 @@ namespace epic8.NPCBehavior
                 }
             }
 
-
-            //grab the list of alive enemies
-            List<Character> aliveEnemies = enemies.Where(e => e.isAlive).ToList();
-
-            //list of enemies we have elemental advantage against to be populated
-            List<Character> eleAdvantage = [];
-
-
-            //populate list of enemies we have elemental advantage against
-            foreach (Character enemy in aliveEnemies)
+            if (skill.TargetType == TargetType.SingleEnemy)
             {
-                if( ElementHelper.GetElementalAdvantage(user.Element, enemy.Element) == ElementalAdvantage.Advantage)
+                //grab the list of alive enemies
+                List<Character> aliveEnemies = enemies.Where(e => e.isAlive).ToList();
+
+                //list of enemies we have elemental advantage against to be populated
+                List<Character> eleAdvantage = [];
+
+
+                //populate list of enemies we have elemental advantage against
+                foreach (Character enemy in aliveEnemies)
                 {
-                    eleAdvantage.Add(enemy);
+                    if (ElementHelper.GetElementalAdvantage(user.Element, enemy.Element) == ElementalAdvantage.Advantage)
+                    {
+                        eleAdvantage.Add(enemy);
+                    }
+                }
+
+                if (eleAdvantage.Count > 0)
+                {
+                    return (skill, ChooseRandom(eleAdvantage));
+                }
+                else
+                {
+                    return (skill, ChooseRandom(aliveEnemies));
                 }
             }
-
-            if(eleAdvantage.Count > 0)
+            else if(skill.TargetType == TargetType.SingleAlly)
             {
-                return (skill, ChooseRandom(eleAdvantage));
+                return (skill, allies[rng.Next(allies.Count)]);
             }
             else
             {
-                return (skill, ChooseRandom(aliveEnemies));
+                return (skill, user);
             }
-
         }
 
         private Character ChooseRandom(List<Character> options)

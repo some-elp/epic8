@@ -11,7 +11,7 @@ namespace epic8.Skills
     public enum EffectTargetType
     {
         Self,
-        SkillTargets,
+        SkillTarget,
         AllAllies,
         AllEnemies,
         RandomEnemy,

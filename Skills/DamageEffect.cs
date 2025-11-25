@@ -32,7 +32,6 @@ namespace epic8.Skills
                 target.TakeDamage(tuple.Item1);
             }
 
-            skillContext.SkillUsed.CurrentCooldown = skillContext.SkillUsed.Cooldown;
         }
     }
 }

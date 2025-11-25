@@ -64,6 +64,7 @@ namespace epic8.Skills
             {
                 effect.ApplyEffect(skillContext);
             }
+            CurrentCooldown = Cooldown;
         }
 
         public float ExtraModifier(Character user, Character target)
