@@ -42,5 +42,17 @@ namespace epic8.Field
                 return _team1;
             }
         }
+
+        public void InitializePassives()
+        {
+            foreach(Character character in _team1.Concat(_team2))
+            {
+
+                foreach (var passive in character.Passives)
+                {
+                    passive.Initialize(character, this);
+                }
+            }
+        }
     }
 }

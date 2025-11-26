@@ -1,4 +1,5 @@
-﻿using epic8.Units;
+﻿using epic8.PassiveSkills;
+using epic8.Units;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,9 @@ namespace epic8.Field
         {
             Console.WriteLine("--- Battle Start! ---");
             //Start of battle
+
+            BattleContext context = new BattleContext(_team1, _team2);
+            context.InitializePassives();
 
             //Keep looping while both teams have at least 1 unit alive
             while (_team1.Any(c => c.isAlive) && _team2.Any(c => c.isAlive))
@@ -57,18 +61,15 @@ namespace epic8.Field
                 acting.takeTurn(allies, enemies);
 
                 //Check to see if any units have died after this turn.
-                foreach ( Character unit in _team1)
+                foreach ( Character unit in _team1.Concat(_team2))
                 {
                     if (unit.CurrentHP <= 0 )
                     {
                         unit.isAlive = false;
-                    }
-                }
-                foreach (Character unit in _team2)
-                {
-                    if (unit.CurrentHP <= 0)
-                    {
-                        unit.isAlive = false;
+                        foreach (PassiveSkill passive in unit.Passives)
+                        {
+                            passive.Dispose();
+                        }
                     }
                 }
             }

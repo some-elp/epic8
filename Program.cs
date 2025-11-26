@@ -43,6 +43,7 @@ namespace epic8
                 isBuff: true,
                 mods: new StatModifier(StatType.Defense, percentChange: 0.6f));
 
+            //Stats objects for each character in this test
             var MLArunkaStats = new Stats(1500f, 3000f, 25000f, 120f, 30f, 150f, 0f, 0f, 0f);
             var AitherStats = new Stats(1500f, 1500f, 15000f, 200f, 15f, 150f, 0f, 0f, 0f);
             var ElsonStats = new Stats(2000f, 1300f, 13000f, 180f, 100f, 250f, 0f, 0f, 0f);
@@ -80,23 +81,22 @@ namespace epic8
                 new ApplyStatChangeEffect(IncreaseAttack, EffectTargetType.AllAllies),
                 new ApplyStatChangeEffect(IncreaseDefense, EffectTargetType.AllAllies)]));
 
-            //Tieria S1 and S3
+            //Tieria S1, S2, and S3
             Tieria.Skills.Add(new Skill("Demon Cutter", "bla", 1, TargetType.SingleEnemy,
                 [new DamageEffect(1.0f, 0f, 0f, 1.05f, 1.25f, (u, t) => 1.0f, (u, t) => 0f, EffectTargetType.SkillTarget),
                 new ApplyDecreaseHitChance(1, EffectTargetType.SkillTarget, 0.75f)]));
+            Tieria.Passives.Add(new TieriaS2Passive());
             Tieria.Skills.Add(new Skill("Soul Break", "blah", 4, TargetType.SingleEnemy,
                 [new DamageEffect(1.8f, 0f, 0f, 0.9f, 1.4f, (u, t) => 1.0f, (u, t) => t.GetEffectiveStats().Hp * 0.06f, EffectTargetType.SkillTarget)]));
 
-
+            //Put the characters into teams
             List<Character> team1 = new List<Character> { Elson, Tieria };
             List<Character> team2 = new List<Character> { MLArunka, Aither };
 
-            BattleContext battleContext = new BattleContext(team1, team2);
-
-            Tieria.Passives.Add(new TieriaS2Passive(Tieria, battleContext));
-
+            //Create the match
             Battle battle = new Battle(team1, team2);
 
+            //Start the battle
             battle.Start();
         }
     }

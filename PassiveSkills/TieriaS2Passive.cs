@@ -12,16 +12,10 @@ namespace epic8.PassiveSkills
 {
     public class TieriaS2Passive : PassiveSkill
     {
-        private readonly Character _owner;
-        private readonly BattleContext _context;
-
-        public TieriaS2Passive(Character owner, BattleContext context)
+        public override void Initialize()
         {
-            _owner = owner;
             BattleEvents.OnAttackResult += HandleAttack;
-            _context = context;
         }
-
         public override void Dispose()
         {
             BattleEvents.OnAttackResult -= HandleAttack;
@@ -29,18 +23,18 @@ namespace epic8.PassiveSkills
 
         private void HandleAttack(AttackResultEvent e)
         {
-            if(e.Attacker != _owner || e.Hit == HitType.Miss)
+            if(e.Attacker != Owner || e.Hit == HitType.Miss)
             {
                 return;
             }
 
-            Console.WriteLine($"{_owner.Name}'s passive activates.");
-            foreach (Character ally in _context.getAlliesOf(_owner))
+            Console.WriteLine($"{Owner.Name}'s passive activates.");
+            foreach (Character ally in BattleContext.getAlliesOf(Owner))
             {
-                if(ally != _owner && ally.isAlive)
+                if(ally != Owner && ally.isAlive)
                 {
                     ally.CRMeter += 0.15f;
-                    Console.WriteLine($"{_owner.Name}'s S2 increases {ally.Name}'s CR by 15%.");
+                    Console.WriteLine($"{Owner.Name}'s S2 increases {ally.Name}'s CR by 15%.");
                 }
             }
         }

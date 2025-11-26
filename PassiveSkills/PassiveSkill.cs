@@ -1,4 +1,5 @@
-﻿using epic8.Units;
+﻿using epic8.Field;
+using epic8.Units;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,17 @@ namespace epic8.PassiveSkills
 {
     public abstract class PassiveSkill
     {
-        private readonly Character _owner;
+        public Character Owner;
+        public BattleContext BattleContext;
 
+        public void Initialize (Character owner, BattleContext battleContext)
+        {
+            Owner = owner;
+            BattleContext = battleContext;
+            Initialize();
+        }
+
+        public abstract void Initialize();
         public abstract void Dispose();
     }
 }
