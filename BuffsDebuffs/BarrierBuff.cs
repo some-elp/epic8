@@ -7,23 +7,14 @@ using System.Threading.Tasks;
 
 namespace epic8.BuffsDebuffs
 {
-    public class BarrierBuff : IStatusEffect
+    public class BarrierBuff : StatusEffect
     {
-        public int Duration { get; set; }
-
-        public bool IsBuff { get; } = true;
-
-        public bool IsDebuff { get; } = false;
 
         public float Remaining { get; set; }
 
-        public string Name { get; } = "Barrier";
-
-        public Character AppliedBy { get; private set; }
-        public bool AppliedThisTurn { get; set; } = true;
         public BarrierBuff(int duration, float amount, Character appliedBy)
+            : base("Barriar", duration, true, false)
         {
-            Duration = duration;
             Remaining = amount;
             AppliedBy = appliedBy;
         }
@@ -33,26 +24,6 @@ namespace epic8.BuffsDebuffs
             float absorbed = Math.Min(Remaining, damage);
             Remaining -= absorbed;
             return absorbed;
-        }
-
-        public void OnApply(Character target)
-        {
-
-        }
-
-        public void OnExpire(Character target)
-        {
-
-        }
-
-        public IEnumerable<StatModifier> GetStatModifiers()
-        {
-            return Enumerable.Empty<StatModifier>();
-        }
-
-        public override string ToString()
-        {
-            return $"{Name}: {Duration}";
         }
     }
 }

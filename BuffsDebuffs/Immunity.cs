@@ -7,11 +7,10 @@ using System.Threading.Tasks;
 
 namespace epic8.BuffsDebuffs
 {
-    public class DecreaseHitChance : StatusEffect
+    public class Immunity : StatusEffect
     {
-
-        public DecreaseHitChance(int duration, Character appliedBy)
-            : base("Decrease Hit Chance", duration, false, true)
+        public Immunity(int duration, Character appliedBy)
+    : base("Immunity", duration, true, false)
         {
             AppliedBy = appliedBy;
         }

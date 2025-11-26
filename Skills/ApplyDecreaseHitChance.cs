@@ -31,12 +31,19 @@ namespace epic8.Skills
                     //move to next target if we didn't proc the debuff
                     continue;
                 }
-                if (!DebuffCalc.EffectivenessCheck(skillContext.User, target))
+                if (!target.IsImmune())
+                {
+                    if (!DebuffCalc.EffectivenessCheck(skillContext.User, target))
+                    {
+                        Console.WriteLine($"{target.Name} resisted Decrease Hit Chance");
+                        return;
+                    }
+                }
+                else
                 {
                     Console.WriteLine($"{target.Name} resisted Decrease Hit Chance");
-                    return;
                 }
-                target.AddStatusEffect(new DecreaseHitChance(_duration, skillContext.User));
+                    target.AddStatusEffect(new DecreaseHitChance(_duration, skillContext.User));
                 Console.WriteLine($"{target.Name} has been affected by Decrease Hit Chance for {_duration} turns.");
 
             }

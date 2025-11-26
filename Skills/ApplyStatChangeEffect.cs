@@ -34,6 +34,7 @@ namespace epic8.Skills
                         //move to next target if we didn't proc the debuff
                         continue;
                     }
+                    if(!target.IsImmune())
                     if(!DebuffCalc.EffectivenessCheck(skillContext.User, target))
                     {
                         Console.WriteLine($"{target.Name} resisted {_statChangeTemplate.Name}");

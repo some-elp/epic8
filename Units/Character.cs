@@ -43,7 +43,7 @@ namespace epic8.Units
         public INPCController? NPCController { get; }
 
         //List of buffs/debuffs affecting this character
-        public List<IStatusEffect> StatusEffects { get; } = [];
+        public List<StatusEffect> StatusEffects { get; } = [];
 
         //List of passives owned by this character
         public List<PassiveSkill> Passives { get; set; } = [];
@@ -60,10 +60,10 @@ namespace epic8.Units
             NPCController = npc;
         }
 
-        public void AddStatusEffect(IStatusEffect effect)
+        public void AddStatusEffect(StatusEffect effect)
         {
             //Prevent duplicate status effects
-            StatusEffects.RemoveAll(e => e is IStatusEffect other && other.Name == effect.Name);
+            StatusEffects.RemoveAll(e => e is StatusEffect other && other.Name == effect.Name);
 
             effect.OnApply(this);
             StatusEffects.Add(effect);
@@ -80,6 +80,12 @@ namespace epic8.Units
                     StatusEffects.RemoveAt(i);
                 }
             }
+        }
+
+        public bool IsImmune()
+        {
+            //for now, unaffected by negative effects if we have immunity buff
+            return StatusEffects.Any(e => e is Immunity);
         }
 
         public Stats GetEffectiveStats()

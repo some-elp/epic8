@@ -22,8 +22,8 @@ namespace epic8.Skills
             foreach (Character target in skillContext.GetTargets(TargetType))
             {
                 //get list of all debuffs on the target
-                List<IStatusEffect> debuffs = target.StatusEffects.Where(e => e.IsDebuff).ToList();
-                foreach (IStatusEffect debuff in debuffs)
+                List<StatusEffect> debuffs = target.StatusEffects.Where(e => e.IsDebuff).ToList();
+                foreach (StatusEffect debuff in debuffs)
                 {
                     //not sure if we need this for debuffs, or at all honestly.
                     debuff.OnExpire(target);
@@ -31,6 +31,8 @@ namespace epic8.Skills
                     //remove the debuff.
                     target.StatusEffects.Remove(debuff);
                 }
+                Console.WriteLine($"{skillContext.User.Name} has cleansed all debuffs from {target.Name}");
+
             }
         }
     }

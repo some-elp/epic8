@@ -38,9 +38,9 @@ namespace epic8.Skills
                     return;
                 }
                 //get list of X buffs on the target, should be in application order.
-                List<IStatusEffect> buffs = target.StatusEffects.Where(e => e.IsBuff).Take(_amount).ToList();
+                List<StatusEffect> buffs = target.StatusEffects.Where(e => e.IsBuff).Take(_amount).ToList();
 
-                foreach (IStatusEffect buff in buffs)
+                foreach (StatusEffect buff in buffs)
                 {
                     //not sure if we need this for debuffs, or at all honestly.
                     buff.OnExpire(target);
