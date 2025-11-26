@@ -10,18 +10,37 @@ namespace epic8.Field
 {
     public class BattleContext
     {
-        public List<Character> allUnits { get; }
+        private readonly List<Character> _team1;
+        private readonly List<Character> _team2;
 
-        public event Action<Character, Skill>? onSkillUsed;
-
-        public BattleContext(List<Character> units)
+        public BattleContext(List<Character> team1, List<Character> team2)
         {
-            allUnits = units;
+            _team1 = team1;
+            _team2 = team2;
         }
 
-        public void RegisterCharacter(Character c)
+        public List<Character> getAlliesOf(Character character)
         {
-            allUnits.Add(c);
+            if (_team1.Contains(character))
+            {
+                return _team1;
+            }
+            else
+            {
+                return _team2;
+            }
+        }
+
+        public List<Character> getEnemiesOf(Character character)
+        {
+            if (_team1.Contains(character))
+            {
+                return _team2;
+            }
+            else
+            {
+                return _team1;
+            }
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using epic8.Calcs;
+using epic8.EventClasses;
+using epic8.Field;
 using epic8.Units;
 using System;
 using System.Collections.Generic;
@@ -12,7 +14,12 @@ namespace epic8.Skills
     {
         public EffectTargetType TargetType { get; set; }
 
+        //For unique damage multipliers
         public Func<Character, Character, float> UniqueDamageModFormula { get; }
+
+        //For unique flat damage modifiers
+
+        public Func<Character, Character, float> UniqueFlatModFormula { get; }
 
         //Damage multipliers
         public float AtkRate;
@@ -23,7 +30,8 @@ namespace epic8.Skills
         public float SkillUps;
 
 
-        public DamageEffect(float atkRate, float hpScaling, float defScaling, float power, float skillUps, Func<Character, Character, float> uniqueDamageMod, EffectTargetType targetType)
+        public DamageEffect(float atkRate, float hpScaling, float defScaling, float power, float skillUps,
+            Func<Character, Character, float> uniqueDamageMod, Func<Character, Character, float> uniqueFlatDamageMod, EffectTargetType targetType)
         {
             AtkRate = atkRate;
             HpScaling = hpScaling;
@@ -31,6 +39,7 @@ namespace epic8.Skills
             Power = power;
             SkillUps = skillUps;
             UniqueDamageModFormula = uniqueDamageMod;
+            UniqueFlatModFormula = uniqueFlatDamageMod;
             TargetType = targetType;
         }
 
@@ -47,6 +56,8 @@ namespace epic8.Skills
                     Console.WriteLine($"{skillContext.User.Name} scores a critical hit on {target.Name}!");
                 if (tuple.Item2 == HitType.Crushing)
                     Console.WriteLine($"{skillContext.User.Name} scores a crushing hit on {target.Name}!");
+
+                BattleEvents.PublishAttackResult(new AttackResultEvent(skillContext.User, target, tuple.Item2));
                 target.TakeDamage(tuple.Item1);
             }
 

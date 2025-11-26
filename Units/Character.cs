@@ -1,6 +1,7 @@
 ﻿using epic8.BuffsDebuffs;
 using epic8.Calcs;
 using epic8.NPCBehavior;
+using epic8.PassiveSkills;
 using epic8.Skills;
 using System;
 using System.Collections.Generic;
@@ -44,6 +45,9 @@ namespace epic8.Units
         //List of buffs/debuffs affecting this character
         public List<IStatusEffect> StatusEffects { get; } = [];
 
+        //List of passives owned by this character
+        public List<PassiveSkill> Passives { get; set; } = [];
+
         public Character(string name, Element element, string role, Stats baseStats, List<Skill> skills, ControlType control, INPCController? npc = null)
         {
             Name = name;
@@ -58,11 +62,8 @@ namespace epic8.Units
 
         public void AddStatusEffect(IStatusEffect effect)
         {
-            //Prevent duplicate StatChange effects
-            if (effect is StatChange sc)
-            {
-                StatusEffects.RemoveAll(e => e is StatChange other && other.Name == sc.Name);
-            }
+            //Prevent duplicate status effects
+            StatusEffects.RemoveAll(e => e is IStatusEffect other && other.Name == effect.Name);
 
             effect.OnApply(this);
             StatusEffects.Add(effect);
@@ -194,6 +195,10 @@ namespace epic8.Units
             if( CurrentHP <= 0 )
             {
                 isAlive = false;
+                foreach (PassiveSkill passive in Passives)
+                {
+                    passive.Dispose();
+                }
                 Console.WriteLine($"{Name} was defeated.");
             }
             else

@@ -1,4 +1,5 @@
-﻿using epic8.Units;
+﻿using epic8.BuffsDebuffs;
+using epic8.Units;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,24 @@ namespace epic8.Calcs
         {
             bool canMiss = (advantage == ElementalAdvantage.Disadvantage);
 
+            //eventually probably need to add a variable for total miss chance based on evasion + miss debuff etc
+
+            //Check for miss debuff
+            if (user.StatusEffects.Any(s => s is DecreaseHitChance))
+            {
+                if(canMiss)
+                {
+                    //100% chance to miss if elemental advantage and miss debuff
+                    return HitType.Miss;
+                }
+
+                // 50% chance to miss if miss debuff
+                if (rng.NextDouble() <= 0.5)
+                {
+                    return HitType.Miss;
+                }
+
+            }
             //Elemental disadvantage miss chance for now
             if (canMiss && rng.NextDouble() <= 0.5)
                 return HitType.Miss;

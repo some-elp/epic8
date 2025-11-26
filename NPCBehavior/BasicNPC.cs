@@ -54,6 +54,9 @@ namespace epic8.NPCBehavior
                 //list of enemies we have elemental advantage against to be populated
                 List<Character> eleAdvantage = [];
 
+                //list of enemies that do not have elemental advantage against us
+                List<Character> eleNeutral = [];
+
 
                 //populate list of enemies we have elemental advantage against
                 foreach (Character enemy in aliveEnemies)
@@ -64,10 +67,24 @@ namespace epic8.NPCBehavior
                     }
                 }
 
+                //populate list of enemies we are elementally neutral against
+                foreach (Character enemy in aliveEnemies)
+                {
+                    if (ElementHelper.GetElementalAdvantage(user.Element, enemy.Element) == ElementalAdvantage.Neutral)
+                    {
+                        eleNeutral.Add(enemy);
+                    }
+                }
+
                 if (eleAdvantage.Count > 0)
                 {
                     //Select only among enemies we have elemental advantage against
                     return (skill, ChooseRandom(eleAdvantage));
+                }
+                else if (eleNeutral.Count > 0)
+                {
+                    //Select among enemies that we don't have disadvantage against
+                    return (skill, ChooseRandom(eleNeutral));
                 }
                 else
                 {
@@ -77,8 +94,9 @@ namespace epic8.NPCBehavior
             }
             else if(skill.TargetType == TargetType.SingleAlly)
             {
-                //For now, just pick any random ally
-                return (skill, allies[rng.Next(allies.Count)]);
+                //For now, just pick any random alive ally
+                List<Character> aliveAllies = allies.Where(c => c.isAlive).ToList();
+                return (skill, aliveAllies[rng.Next(aliveAllies.Count)]);
             }
             else
             {

@@ -26,7 +26,6 @@ namespace epic8.Field
         {
             Console.WriteLine("--- Battle Start! ---");
             //Start of battle
-            _turnManager.PrintTimeline();
 
             //Keep looping while both teams have at least 1 unit alive
             while (_team1.Any(c => c.isAlive) && _team2.Any(c => c.isAlive))

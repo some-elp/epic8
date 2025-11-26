@@ -49,5 +49,10 @@ namespace epic8.BuffsDebuffs
         {
             return Enumerable.Empty<StatModifier>();
         }
+
+        public override string ToString()
+        {
+            return $"{Name}: {Duration}";
+        }
     }
 }

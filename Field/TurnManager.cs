@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace epic8.Field
 {
@@ -12,6 +13,8 @@ namespace epic8.Field
         public List<Character> units;
 
         private int _turnCount = 1;
+
+        private bool _firstPrint = true;
         public TurnManager(List<Character> characters)
         {
             units = characters;
@@ -31,6 +34,15 @@ namespace epic8.Field
 
         public void PrintTimeline()
         {
+            if (_firstPrint)
+            {
+                _firstPrint = false;
+            }
+            else
+            {
+                Console.WriteLine();
+            }
+
             Console.WriteLine("--- Current Timeline ---");
             Console.WriteLine($"--- Turn {_turnCount} ---");
             foreach (Character unit in units.Where(character => character.isAlive))
@@ -72,6 +84,8 @@ namespace epic8.Field
                 //if there are any units at 100% CR
                 if (readyUnits.Any())
                 {
+                    PrintTimeline();
+                    _turnCount++;
                     //Get the first one in the list
                     Character readyUnit = readyUnits.First();
                     readyUnit.CRMeter = 0f;
@@ -81,14 +95,14 @@ namespace epic8.Field
                     {
                         other.CRMeter = 0.9999f;
                     }
+
+
+
                     return readyUnit;
                 }
 
-                _turnCount++;
-
                 //no one at 100%, advance time
                 AdvanceTime();
-                PrintTimeline();
             }
 
         }

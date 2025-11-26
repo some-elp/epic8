@@ -25,7 +25,7 @@ namespace epic8.Skills
             {
                 target.CRMeter += _amount;
 
-                Console.WriteLine($"{target} has been CR Pushed by {_amount*100f}%");
+                Console.WriteLine($"{target.Name} has been CR Pushed by {_amount*100f}%");
             }
         }
     }
