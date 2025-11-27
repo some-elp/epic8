@@ -43,12 +43,12 @@ namespace epic8.Field
                 Console.WriteLine();
             }
 
-            Console.WriteLine("--- Current Timeline ---");
             Console.WriteLine($"--- Turn {_turnCount} ---");
-            foreach (Character unit in units.Where(character => character.isAlive))
+            foreach (Character unit in units.Where(character => character.isAlive).OrderBy(u => u.CRMeter))
             {
                 Console.WriteLine($" - {unit}");
             }
+            Console.WriteLine();
         }
 
         private void AdvanceTime()

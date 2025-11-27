@@ -383,7 +383,7 @@ namespace epic8.Units
 
         public override string ToString()
         {
-            return $"{Name} (HP, {CurrentHP}/{GetEffectiveStats().Hp}, Speed {GetEffectiveStats().Speed}, CR {CRMeter*100}%, Status: {string.Join(", ", StatusEffects.Select(s => s.ToString()))})";
+            return $"CR {CRMeter * 100}%, {Name} (HP, {CurrentHP}/{GetEffectiveStats().Hp}, Speed {GetEffectiveStats().Speed}, Status: {string.Join(", ", StatusEffects.Select(s => s.ToString()))})";
         }
     }
 }

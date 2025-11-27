@@ -13,7 +13,7 @@ namespace epic8.BuffsDebuffs
         public float Remaining { get; set; }
 
         public BarrierBuff(int duration, float amount, Character appliedBy)
-            : base("Barriar", duration, true, false)
+            : base("Barrier", duration, true, false)
         {
             Remaining = amount;
             AppliedBy = appliedBy;
@@ -24,6 +24,12 @@ namespace epic8.BuffsDebuffs
             float absorbed = Math.Min(Remaining, damage);
             Remaining -= absorbed;
             return absorbed;
+        }
+
+        public override string ToString()
+        {
+            return $"{Name}: Amount Remaining - {Remaining} - {Duration} turn(s)";
+
         }
     }
 }

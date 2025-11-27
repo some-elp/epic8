@@ -26,7 +26,14 @@ namespace epic8.Skills
         {
             foreach (Character target in skillContext.GetTargets(TargetType))
             {
-
+                //If we missed, don't apply the effects
+                if (skillContext.HitResults.TryGetValue(target, out HitType hit))
+                {
+                    if (hit == HitType.Miss)
+                    {
+                        continue;
+                    }
+                }
                 if (!DebuffCalc.SkillRollSucceeds(_chance))
                 {
                     //move to next target if we didn't proc the effect

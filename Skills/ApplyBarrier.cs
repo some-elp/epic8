@@ -27,9 +27,10 @@ namespace epic8.Skills
             foreach (Character target in skillContext.GetTargets(TargetType))
             {
                 //Find the value of the barrier.
-                float amount = _amountFunc(skillContext, target);
+                float amount = (float)(Math.Round(_amountFunc(skillContext, target)));
                 //Add barrier to the Character's buff/debuff list
                 target.AddStatusEffect(new BarrierBuff(_duration, amount, skillContext.User));
+                Console.WriteLine($"{target.Name} has received a barrier of {amount}");
             }
         }
 

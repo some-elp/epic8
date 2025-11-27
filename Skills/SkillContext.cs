@@ -1,4 +1,5 @@
-﻿using epic8.Units;
+﻿using epic8.Calcs;
+using epic8.Units;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,9 @@ namespace epic8.Skills
 
         public List<Character> Allies { get; }
         public List<Character> Enemies { get; }
+
+        //Keep track of what kind of hit was made on each target
+        public Dictionary<Character, HitType> HitResults { get; } = new Dictionary<Character, HitType>();
 
         public SkillContext(Character user, Character target, Skill skillUsed, List<Character> allies, List<Character> enemies)
         {

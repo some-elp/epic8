@@ -26,6 +26,14 @@ namespace epic8.Skills
         {
             foreach (Character target in skillContext.GetTargets(TargetType))
             {
+                //If we missed, don't apply the effects
+                if (skillContext.HitResults.TryGetValue(target, out HitType hit))
+                {
+                    if (hit == HitType.Miss)
+                    {
+                        continue;
+                    }
+                }
                 if (!DebuffCalc.SkillRollSucceeds(_chance))
                 {
                     //move to next target if we didn't proc the debuff
@@ -36,12 +44,13 @@ namespace epic8.Skills
                     if (!DebuffCalc.EffectivenessCheck(skillContext.User, target))
                     {
                         Console.WriteLine($"{target.Name} resisted Decrease Hit Chance");
-                        return;
+                        continue;
                     }
                 }
                 else
                 {
-                    Console.WriteLine($"{target.Name} resisted Decrease Hit Chance");
+                    Console.WriteLine($"{target.Name} is immune to Decrease Hit Chance");
+                    continue;
                 }
                     target.AddStatusEffect(new DecreaseHitChance(_duration, skillContext.User));
                 Console.WriteLine($"{target.Name} has been affected by Decrease Hit Chance for {_duration} turns.");

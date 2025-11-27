@@ -43,7 +43,7 @@ namespace epic8.BuffsDebuffs
 
         public override string ToString()
         {
-            return $"{Name}: {Duration}";
+            return $"{Name}: {Duration} turn(s)";
         }
     }
 }

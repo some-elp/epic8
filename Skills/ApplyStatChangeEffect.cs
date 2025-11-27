@@ -27,18 +27,33 @@ namespace epic8.Skills
 
             foreach (Character target  in skillContext.GetTargets(TargetType))
             {
+                //If we missed, don't apply the effects
                 if (_statChangeTemplate.IsDebuff)
                 {
+                    if (skillContext.HitResults.TryGetValue(target, out HitType hit))
+                    {
+                        if (hit == HitType.Miss)
+                        {
+                            continue;
+                        }
+                    }
                     if (!DebuffCalc.SkillRollSucceeds(_chance))
                     {
                         //move to next target if we didn't proc the debuff
                         continue;
                     }
-                    if(!target.IsImmune())
-                    if(!DebuffCalc.EffectivenessCheck(skillContext.User, target))
+                    if (!target.IsImmune())
                     {
-                        Console.WriteLine($"{target.Name} resisted {_statChangeTemplate.Name}");
-                        return;
+                        if (!DebuffCalc.EffectivenessCheck(skillContext.User, target))
+                        {
+                            Console.WriteLine($"{target.Name} resisted {_statChangeTemplate.Name}");
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{target.Name} is Immune to {_statChangeTemplate.Name}");
+                        continue;
                     }
                 }
                 //Clone the statmodifiers on this buff/debuff
@@ -53,3 +68,4 @@ namespace epic8.Skills
 
     }
 }
+
