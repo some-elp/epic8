@@ -45,5 +45,10 @@ namespace epic8.Units
         }
 
         public Stats Clone () => (Stats)MemberwiseClone();
+
+        public override string ToString()
+        {
+            return $"{Attack}, {Defense}, {Hp}, {Speed}, {CritChance}, {CritDamage}, {Effectiveness}, {EffectResistance}, {DualAttackChance}";
+        }
     }
 }

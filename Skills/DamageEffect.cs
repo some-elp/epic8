@@ -15,11 +15,11 @@ namespace epic8.Skills
         public EffectTargetType TargetType { get; set; }
 
         //For unique damage multipliers
-        public Func<Character, Character, float> UniqueDamageModFormula { get; }
+        public Func<SkillContext, Character, float> UniqueDamageModFormula { get; }
 
         //For unique flat damage modifiers
 
-        public Func<Character, Character, float> UniqueFlatModFormula { get; }
+        public Func<SkillContext, Character, float> UniqueFlatModFormula { get; }
 
         //Damage multipliers
         public float AtkRate;
@@ -31,7 +31,7 @@ namespace epic8.Skills
 
 
         public DamageEffect(float atkRate, float hpScaling, float defScaling, float power, float skillUps,
-            Func<Character, Character, float> uniqueDamageMod, Func<Character, Character, float> uniqueFlatDamageMod, EffectTargetType targetType)
+            Func<SkillContext, Character, float> uniqueDamageMod, Func<SkillContext, Character, float> uniqueFlatDamageMod, EffectTargetType targetType)
         {
             AtkRate = atkRate;
             HpScaling = hpScaling;
@@ -49,7 +49,7 @@ namespace epic8.Skills
             foreach (Character target in skillContext.GetTargets(TargetType))
             {
                 //Grab how much damage we did to this target, and what kind of hit we made
-                Tuple<float, HitType> tuple = DamageCalc.CalculateDamage(skillContext.User, target, this);
+                Tuple<float, HitType> tuple = DamageCalc.CalculateDamage(skillContext, target, this);
 
                 skillContext.HitResults[target] = tuple.Item2;
                 if (tuple.Item2 == HitType.Miss)

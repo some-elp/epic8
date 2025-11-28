@@ -10,7 +10,7 @@ namespace epic8.Calcs
 {
     public static class DamageCalc
     {
-        public static Tuple<float, HitType> CalculateDamage(Character user, Character target, DamageEffect dmgEffect)
+        public static Tuple<float, HitType> CalculateDamage(SkillContext skillContext, Character target, DamageEffect dmgEffect)
         {
 
             /*
@@ -22,21 +22,21 @@ namespace epic8.Calcs
             float targetDefense = target.GetEffectiveStats().Defense;
 
             //the 3 basic damage scaling stats
-            float attack = user.GetEffectiveStats().Attack;
-            float hp = user.GetEffectiveStats().Hp;
-            float userDefense = user.GetEffectiveStats().Defense;
+            float attack = skillContext.User.GetEffectiveStats().Attack;
+            float hp = skillContext.User.GetEffectiveStats().Hp;
+            float userDefense = skillContext.User.GetEffectiveStats().Defense;
 
             //1.1 or 1.0
-            ElementalAdvantage advantage = ElementHelper.GetElementalAdvantage(user.Element, target.Element);
+            ElementalAdvantage advantage = ElementHelper.GetElementalAdvantage(skillContext.User.Element, target.Element);
             float adv = ElementHelper.GetEleAdvantageMultiplier(advantage);
 
             //What kind of hit did we make
-            HitType hitType = HitCalc.DetermineHit(user, target, advantage);
-            float hitMod = HitCalc.GetHitMultiplier(hitType, user);
+            HitType hitType = HitCalc.DetermineHit(skillContext.User, target, advantage);
+            float hitMod = HitCalc.GetHitMultiplier(hitType, skillContext.User);
 
             //used for skills with additional damage modifiers.
-            float extraMod = dmgEffect.UniqueDamageModFormula(user, target);
-            float extraFlat = dmgEffect.UniqueFlatModFormula(user, target);
+            float extraMod = dmgEffect.UniqueDamageModFormula(skillContext, target);
+            float extraFlat = dmgEffect.UniqueFlatModFormula(skillContext, target);
 
             //The actual damage formula
             float damage = (float)Math.Round(((attack*dmgEffect.AtkRate+hp*dmgEffect.HpScaling+userDefense*dmgEffect.DefScaling+extraFlat)

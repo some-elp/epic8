@@ -38,7 +38,7 @@ namespace epic8.Units
         public bool isAlive { get; set; } = true;
 
         //Player vs NPC controlled
-        public ControlType Control { get; }
+        public ControlType Control { get; set; }
         //For holding the type of NPC rules that this character will use.
         public INPCController? NPCController { get; }
 
@@ -383,7 +383,7 @@ namespace epic8.Units
 
         public override string ToString()
         {
-            return $"CR {CRMeter * 100}%, {Name} (HP, {CurrentHP}/{GetEffectiveStats().Hp}, Speed {GetEffectiveStats().Speed}, Status: {string.Join(", ", StatusEffects.Select(s => s.ToString()))})";
+            return $"CR {CRMeter * 100}%, {Name} (HP: {CurrentHP}/{GetEffectiveStats().Hp}, Speed {GetEffectiveStats().Speed}, Status: {string.Join(", ", StatusEffects.Select(s => s.ToString()))})";
         }
     }
 }

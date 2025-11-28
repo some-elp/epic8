@@ -1,0 +1,119 @@
+{
+	"Name": "Aither",
+	"Element": "Ice",
+	"Role": "Soulweaver",
+	"NPCController": {
+		"Type": "HealerNPC",
+		"Parameters": {
+			"S2Threshold": 0.8,
+			"S3Threshold": 0.6
+		}
+	},
+
+	"BaseStats": {
+		"Attack": 1500,
+		"Defense": 1500,
+		"Hp": 15000,
+		"Speed": 200,
+		"CritChance": 15,
+		"CritDamage": 150,
+		"Effectiveness": 0,
+		"EffectResistance": 0,
+		"DualAttackChance": 3
+	},
+
+	"Skills": [
+		{
+			"Name": "Whispering Spirit",
+			"Description": "Damage, plus 50% chance to inflict Decrease Speed",
+			"Cooldown": 1,
+			"TargetType": "SingleEnemy",
+			"Effects": [
+				{
+					"EffectType": "Damage",
+					"EffectTargetType": "SkillTarget",
+					"Damage": { 
+						"AtkRate": 1,
+						"HpScaling": 0,
+						"DefScaling": 0,
+						"Power": 1.05,
+						"SkillUps": 1.25,
+						"PercentFormula": "1",
+						"FlatFormula": "0"
+					}
+				},
+				{
+					"EffectType": "ApplyStatChange",
+					"EffectTargetType": "SkillTarget",
+					"StatChange": {
+						"Name": "DecreaseSpeed",
+						"Duration": 2,
+						"IsBuff": false,
+						"IsDebuff": true,
+						"StatModifiers": [
+							{
+								"Stat": "Speed",
+								"PercentChange": -0.3,
+								"FlatChange": 0
+							}
+						],
+						"Chance": 0.5
+					}
+				}
+			]
+		},
+		{
+			"Name": "Guard",
+			"Description": "Recovers HP of target, Dispels 2 Debuffs, Pushes User by 20%",
+			"Cooldown": 2,
+			"TargetType": "SingleAlly",
+			"Effects": [
+				{
+					"EffectType": "Heal",
+					"EffectTargetType": "SkillTarget",
+					"Heal": {
+						"Formula": "target_hp * 0.19 * 1.3"
+					}
+				},
+				{
+					"EffectType": "CleanseDebuff",
+					"EffectTargetType": "SkillTarget",
+					"CleanseDebuff": {
+						"Amount": 2
+					}
+				},
+				{
+					"EffectType": "CRPush",
+					"EffectTargetType": "Self",
+					"CRPush": {
+						"Amount": 0.2
+					}
+				}
+			]
+		},
+		{
+			"Name": "Spirit's Call",
+			"Description": "Recovers HP of all allies and grants a Barrier to them",
+			"Cooldown": 3,
+			"TargetType": "SingleAlly",
+			"Effects": [
+				{
+					"EffectType": "Heal",
+					"EffectTargetType": "AllAllies",
+					"Heal": {
+						"Formula": "target_hp * 0.15 * 1.4"
+					}
+				},
+				{
+					"EffectType": "Barrier",
+					"EffectTargetType": "AllAllies",
+					"Barrier": {
+						"Formula": "target_hp * 0.15",
+						"Duration": 2
+					}
+				}
+			]
+		}
+	]
+
+}
