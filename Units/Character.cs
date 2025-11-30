@@ -1,5 +1,6 @@
 ﻿using epic8.BuffsDebuffs;
 using epic8.Calcs;
+using epic8.Field;
 using epic8.NPCBehavior;
 using epic8.PassiveSkills;
 using epic8.Skills;
@@ -47,6 +48,13 @@ namespace epic8.Units
 
         //List of passives owned by this character
         public List<PassiveSkill> Passives { get; set; } = [];
+
+
+        //How much fighting spirit do we have (Max 100, not useful on every unit)
+        public float FightingSpirit { get; set; } = 0;
+
+        //How much focus do we have (Max 5, not useful on every unit)
+        public float Focus { get; set; } = 0;
 
         public Character(string name, Element element, string role, Stats baseStats, List<Skill> skills, ControlType control, INPCController? npc = null)
         {
@@ -225,6 +233,10 @@ namespace epic8.Units
             {
                 PlayerTurn(allies, enemies);
             }
+
+
+            //Trigger on turn end effects.
+            BattleEvents.PublishTurnEnd(new OnTurnEnd(this));
 
             //Reduce the cooldown of all skills by 1 at the end of turn
             foreach (Skill skill in Skills)

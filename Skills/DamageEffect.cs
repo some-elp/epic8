@@ -1,5 +1,4 @@
 ﻿using epic8.Calcs;
-using epic8.EventClasses;
 using epic8.Field;
 using epic8.Units;
 using System;
@@ -28,6 +27,8 @@ namespace epic8.Skills
         public float Power;
         //This one is for skill enhancements
         public float SkillUps;
+
+        public float defPen { get; set; } = 0f;
 
 
         public DamageEffect(float atkRate, float hpScaling, float defScaling, float power, float skillUps,
@@ -59,7 +60,7 @@ namespace epic8.Skills
                 if (tuple.Item2 == HitType.Crushing)
                     Console.WriteLine($"{skillContext.User.Name} scores a crushing hit on {target.Name}!");
 
-                BattleEvents.PublishAttackResult(new AttackResultEvent(skillContext.User, target, tuple.Item2));
+                BattleEvents.PublishAttackResult(new OnAttackResult(skillContext.User, target, tuple.Item2));
                 target.TakeDamage(tuple.Item1);
             }
 

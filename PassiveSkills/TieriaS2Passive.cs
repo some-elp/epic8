@@ -6,22 +6,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using epic8.EventClasses;
 
 namespace epic8.PassiveSkills
 {
     public class TieriaS2Passive : PassiveSkill
     {
+        //subscribe to relevant events
         public override void Initialize()
         {
             BattleEvents.OnAttackResult += HandleAttack;
         }
+
+        //unsubscribe from relevant events
         public override void Dispose()
         {
             BattleEvents.OnAttackResult -= HandleAttack;
         }
 
-        private void HandleAttack(AttackResultEvent e)
+        private void HandleAttack(OnAttackResult e)
         {
             if(e.Attacker != Owner || e.Hit == HitType.Miss)
             {

@@ -31,6 +31,9 @@ namespace epic8.Field
             BattleContext context = new BattleContext(_team1, _team2);
             context.InitializePassives();
 
+            //Trigger start of battle passives
+            BattleEvents.PublishBattleStart(new OnBattleStart());
+
             //Keep looping while both teams have at least 1 unit alive
             while (_team1.Any(c => c.isAlive) && _team2.Any(c => c.isAlive))
             {

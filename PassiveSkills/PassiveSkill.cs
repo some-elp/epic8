@@ -20,7 +20,10 @@ namespace epic8.PassiveSkills
             Initialize();
         }
 
+        //subscribe to relevant events
         public abstract void Initialize();
+
+        //unsubscribe from relevant events
         public abstract void Dispose();
     }
 }
