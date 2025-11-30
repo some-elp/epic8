@@ -1,0 +1,139 @@
+{
+    "Name": "Elson",
+    "Element": "Light",
+    "Role": "Soulweaver",
+    "NPCController": {
+        "Type": "BasicNPC"
+    },
+
+    "BaseStats": {
+        "Attack": 2000,
+        "Defense": 1300,
+        "Hp": 13000,
+        "Speed": 180,
+        "CritChance": 100,
+        "CritDamage": 250,
+        "Effectiveness": 0,
+        "EffectResistance": 0,
+        "DualAttackChance": 3
+    },
+
+    "Skills": [
+        {
+            "Name": "Heavy Strike",
+            "Description": "Damage, plus 75% chance to Decrease Attack for 1 turn",
+            "Cooldown": 1,
+            "TargetType": "SingleEnemy",
+            "Effects": [
+                {
+                    "EffectType": "Damage",
+                    "EffectTargetType": "SkillTarget",
+                    "Damage": {
+                        "AtkRate": 0.9,
+                        "HpScaling": 0,
+                        "DefScaling": 0,
+                        "Power": 1,
+                        "SkillUps": 1.3,
+                        "PercentFormula": "1",
+                        "FlatFormula": "0"
+                    }
+                },
+                {
+                    "EffectType": "ApplyStatChange",
+                    "EffectTargetType": "SkillTarget",
+                    "StatChange": {
+                        "Name": "Decrease Attack",
+                        "Duration": 1,
+                        "IsBuff": false,
+                        "IsDebuff": true,
+                        "StatModifiers": [
+                            {
+                                "Stat": "Attack",
+                                "PercentChange": -0.6,
+                                "FlatChange": 0
+                            }
+                        ],
+                        "Chance": 0.75
+                    }
+                }
+            ]
+        },
+        {
+            "Name": "Meteor Shower",
+            "Description": "AoE Damage, AoE Heal",
+            "Cooldown": 3,
+            "TargetType": "SingleEnemy",
+            "Effects": [
+                {
+                    "EffectType": "Damage",
+                    "EffectTargetType": "AllEnemies",
+                    "Damage": {
+                        "AtkRate": 0.7,
+                        "HpScaling": 0,
+                        "DefScaling": 0,
+                        "Power": 0.9,
+                        "SkillUps": 1.4,
+                        "PercentFormula": "1",
+                        "FlatFormula": "0"
+                    }
+                },
+                {
+                    "EffectType": "Heal",
+                    "EffectTargetType": "AllAllies",
+                    "Heal": {
+                        "Formula": "target_hp * 0.15 * 1.3"
+                    }
+                }
+            ]
+        },
+        {
+            "Name": "Light's Protection",
+            "Description": "2 turn Attack and Defense buff + heal",
+            "Cooldown": 4,
+            "TargetType": "SingleAlly",
+            "Effects": [
+                {
+                    "EffectType": "Heal",
+                    "EffectTargetType": "AllAllies",
+                    "Heal": {
+                        "Formula": "target_hp * 0.1"
+                    }
+                },
+                {
+                    "EffectType": "ApplyStatChange",
+                    "EffectTargetType": "AllAllies",
+                    "StatChange": {
+                        "Name": "Increase Attack",
+                        "Duration": 2,
+                        "IsBuff": true,
+                        "IsDebuff": false,
+                        "StatModifiers": [
+                            {
+                                "Stat": "Attack",
+                                "PercentChange": 0.5,
+                                "FlatChange": 0
+                            }
+                        ]
+                    }
+                },
+                {
+                    "EffectType": "ApplyStatChange",
+                    "EffectTargetType": "AllAllies",
+                    "StatChange": {
+                        "Name": "Increase Defense",
+                        "Duration": 2,
+                        "IsBuff": true,
+                        "IsDebuff": false,
+                        "StatModifiers": [
+                            {
+                                "Stat": "Defense",
+                                "PercentChance": 0.6,
+                                "FlatChange": 0
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}

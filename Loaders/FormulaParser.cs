@@ -20,6 +20,7 @@ namespace epic8.Loaders
             return (ctx, t) =>
             {
                 exp.Parameters["target_hp"] = t.GetEffectiveStats().Hp;
+                exp.Parameters["user_hp"] = ctx.User.GetEffectiveStats().Hp;
 
                 var result = exp.Evaluate();
                 return Convert.ToSingle(result);

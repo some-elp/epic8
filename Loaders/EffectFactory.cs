@@ -29,6 +29,10 @@ namespace epic8.Loaders
                     return CreateCleanseDebuff(data);
                 case "CRPush":
                     return CreateCRPush(data);
+                case "DispelAllBuffs":
+                    return CreateDispelAllBuffs(data);
+                case "ApplyImmunity":
+                    return CreateApplyImmunity(data);
                 default:
                     throw new Exception("Unknown Effect Type");
 
@@ -125,6 +129,25 @@ namespace epic8.Loaders
             EffectTargetType TargetType;
             Enum.TryParse(data.EffectTargetType, out TargetType);
             return new CRPushEffect(d.Amount, TargetType);
+        }
+
+        //DispelAllBuffs
+        private static ISkillEffect CreateDispelAllBuffs(SkillEffectData data)
+        {
+            var d = data.DispelAllBuffs;
+            EffectTargetType TargetType;
+            Enum.TryParse(data.EffectTargetType, out TargetType);
+            return new DispelAllBuffsEffect(TargetType, d.Chance);
+        }
+
+        //ApplyImmunity
+        private static ISkillEffect CreateApplyImmunity(SkillEffectData data)
+        {
+            var d = data.ApplyImmunity;
+            EffectTargetType TargetType;
+            Enum.TryParse(data.EffectTargetType, out TargetType);
+            return new ApplyImmunity(d.Duration, TargetType);
+
         }
     }
 }

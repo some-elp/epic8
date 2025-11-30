@@ -8,15 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="UnitJSONs\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="NCalcSync" Version="5.8.0" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="UnitJSONs\Aither.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="UnitJSONs\Bask.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="UnitJSONs\Elson.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace epic8.Loaders
 {
+    //This file contains all of the nested objects such to make JSON reading easier.
     public class CharacterData
     {
         public string Name { get; set; }
@@ -49,6 +50,7 @@ namespace epic8.Loaders
         public List<SkillEffectData> Effects { get; set; }
     }
 
+    //Skill Effect stuff, contains an instance of every SkillEffect class
     public class SkillEffectData
     {
         public string EffectType { get; set; }
@@ -60,8 +62,13 @@ namespace epic8.Loaders
         public ApplyStatChangeParams StatChange { get; set; }
         public CleanseParams CleanseDebuff { get; set; }
         public CRPushParams CRPush { get; set; }
+
+        public DispelAllBuffsParams DispelAllBuffs { get; set; }
+
+        public ApplyImmunityParams ApplyImmunity { get; set; }
     }
 
+    //Damage Effect
     public class DamageParams
     {
         public float AtkRate { get; set; }
@@ -74,6 +81,7 @@ namespace epic8.Loaders
         public string FlatFormula { get; set; }
     }
 
+    //ApplyStatChangeEffect
     public class ApplyStatChangeParams
     {
         public string Name { get; set; }
@@ -84,31 +92,48 @@ namespace epic8.Loaders
         public float Chance { get; set; }
     }
 
+    //StatModifiers for StatChance
+    public class StatModifierData
+    {
+        public string Stat { get; set; }
+        public float PercentChange { get; set; }
+        public float FlatChange { get; set; }
+    }
+
+    //HealEffect
     public class HealParams
     {
         public string Formula { get; set; }
     }
 
+    //ApplyBarrier
     public class BarrierParams
     {
         public string Formula { get; set; }
         public int Duration { get; set; }
     }
 
+    //CleanseDebuffEffect
     public class CleanseParams
     {
         public int Amount { get; set; }
     }
 
+    //CRPushEffect
     public class  CRPushParams
     {
         public float Amount {  get; set; }
     }
 
-    public class StatModifierData
+    //DispelAllBuffsEffect
+    public class DispelAllBuffsParams
     {
-        public string Stat {  get; set; }
-        public float PercentChange { get; set; }
-        public float FlatChange { get; set; }
+        public float Chance { get; set; }
+    }
+
+    //ApplyImmunity
+    public class ApplyImmunityParams
+    {
+        public int Duration { get; set; }
     }
 }

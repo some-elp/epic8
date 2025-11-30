@@ -25,7 +25,7 @@
 	"Skills": [
 		{
 			"Name": "Whispering Spirit",
-			"Description": "Damage, plus 50% chance to inflict Decrease Speed",
+			"Description": "Damage, plus 50% chance to inflict Decrease Speed for 2 turns",
 			"Cooldown": 1,
 			"TargetType": "SingleEnemy",
 			"Effects": [
@@ -46,7 +46,7 @@
 					"EffectType": "ApplyStatChange",
 					"EffectTargetType": "SkillTarget",
 					"StatChange": {
-						"Name": "DecreaseSpeed",
+						"Name": "Decrease Speed",
 						"Duration": 2,
 						"IsBuff": false,
 						"IsDebuff": true,
