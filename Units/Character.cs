@@ -49,6 +49,9 @@ namespace epic8.Units
         //List of passives owned by this character
         public List<PassiveSkill> Passives { get; set; } = [];
 
+        //Does this character have an extra turn to take?
+        public int ExtraTurns { get; set; } = 0;
+
 
         //How much fighting spirit do we have (Max 100, not useful on every unit)
         public float FightingSpirit { get; set; } = 0;
@@ -71,10 +74,54 @@ namespace epic8.Units
         public void AddStatusEffect(StatusEffect effect)
         {
             //Prevent duplicate status effects
-            StatusEffects.RemoveAll(e => e is StatusEffect other && other.Name == effect.Name);
+            StatusEffect existingEffect = StatusEffects.FirstOrDefault(s => s.Category == effect.Category);
 
-            effect.OnApply(this);
-            StatusEffects.Add(effect);
+            //If we don't already have effect of this type
+            if (existingEffect == null)
+            {
+                StatusEffects.Add(effect);
+                return;
+            }
+
+            //If we do have an effect of this type, but the new one is better (ex: GAB vs regular attack buff)
+            if(effect.Priority > existingEffect.Priority)
+            {
+                //keep the highest duration
+                effect.Duration = Math.Max(existingEffect.Duration, effect.Duration);
+                StatusEffects.Remove(existingEffect);
+                //Add the new effect to the list
+                StatusEffects.Add(effect);
+            }
+            //new effect is the same prio as new one (most likely exact same buff)
+            else if (effect.Priority == existingEffect.Priority)
+            {
+                if (effect.Duration >= existingEffect.Duration)
+                {
+                    //If the new buff's duration is higher we add a new buff
+                    StatusEffects.Remove(existingEffect);
+                    StatusEffects.Add(effect);
+                }
+                else
+                {
+                    //Otherwise, we do nothing
+                    return;
+                }
+            }
+            //new buff prio is lower (ie: attack buff when we already have GAB)
+            else
+            {
+
+                if (effect.Duration >= existingEffect.Duration)
+                {
+                    existingEffect.Duration = effect.Duration;
+                    existingEffect.AppliedThisTurn = true;
+                }
+                else
+                {
+                    return;
+                }
+            }
+
         }
 
         public void RemoveExpiredEffects()
@@ -224,8 +271,21 @@ namespace epic8.Units
 
         public void takeTurn(List<Character> allies, List<Character> enemies)
         {
+            //Check start of turn ticking buffs/debuffs
+            /* (var statusEffect in StatusEffects.Where(s => s.TickTime == TickTime.StartOfTurn))
+            {
+                if (statusEffect.AppliedThisTurn)
+                {
+                    statusEffect.AppliedThisTurn = false;
+                    continue;
+                }
+
+                statusEffect.Duration -= 1;
+            }
+            RemoveExpiredEffects();*/
+
             //Determine whether the player gets to control this unit or not.
-            if(Control == ControlType.NPC)
+            if (Control == ControlType.NPC)
             {
                 NPCTurn(allies, enemies);
             }
@@ -247,10 +307,10 @@ namespace epic8.Units
                 }
             }
 
-            //Reduce duration of buffs and debuffs
+            //Check end of turn buffs/debuffs
             foreach (var statusEffect in StatusEffects)
             {
-                if(statusEffect.AppliedThisTurn && statusEffect.AppliedBy == this)
+                if(statusEffect.AppliedThisTurn)
                 {
                     statusEffect.AppliedThisTurn = false;
                     continue;
@@ -258,8 +318,16 @@ namespace epic8.Units
 
                 statusEffect.Duration -= 1;
             }
-
             RemoveExpiredEffects();
+
+            //mark appliedthisturn false for all buffs/debuffs
+            foreach (Character character in allies.Concat(enemies))
+            {
+                foreach (StatusEffect statusEffect in character.StatusEffects)
+                {
+                    statusEffect.AppliedThisTurn = false;
+                }
+            }
         }
 
         private void NPCTurn(List<Character> allies, List<Character> enemies)

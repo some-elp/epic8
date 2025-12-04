@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using epic8.Skills;
 using epic8.Units;
 
 namespace epic8.Field

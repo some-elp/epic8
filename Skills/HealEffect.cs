@@ -1,4 +1,5 @@
-﻿using epic8.Units;
+﻿using epic8.BuffsDebuffs;
+using epic8.Units;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,12 @@ namespace epic8.Skills
         {
             foreach (Character target in skillContext.GetTargets(TargetType))
             {
+                //Unhealable check
+                if (target.StatusEffects.Any(e => e is Unhealable))
+                {
+                    Console.WriteLine($"{target.Name} cannot be healed.");
+                    continue;
+                }
                 //Get the amount that we should heal the target for
                 float amount = (float)(Math.Round(_healFormula(skillContext, target)));
 

@@ -62,6 +62,7 @@ namespace epic8.Skills
                     //limit cooldown between 0 and the skill's max cooldown.
                     Math.Clamp(target.Skills[i].CurrentCooldown, 0, target.Skills[i].Cooldown);
                 }
+                Console.WriteLine($"{target.Name}'s Skill Cooldowns were increased by {_amount} turns.");
             }
         }
     }

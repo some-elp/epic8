@@ -44,8 +44,8 @@
                     "StatChange": {
                         "Name": "Decrease Attack",
                         "Duration": 1,
+                        "Category": "Decrease Attack",
                         "IsBuff": false,
-                        "IsDebuff": true,
                         "StatModifiers": [
                             {
                                 "Stat": "Attack",

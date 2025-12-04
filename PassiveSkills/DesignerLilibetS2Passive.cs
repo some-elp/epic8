@@ -43,7 +43,7 @@ namespace epic8.PassiveSkills
                 int count = 0;
                 foreach (Character ally in BattleContext.getAlliesOf(Owner))
                 {
-                    count += ally.StatusEffects.Count(s => s.IsDebuff);
+                    count += ally.StatusEffects.Count(s => !(s.IsBuff));
                 }
 
                 if(count > 0)
@@ -65,7 +65,7 @@ namespace epic8.PassiveSkills
             Owner.FightingSpirit = 0;
 
             //get list of all debuffs on caster
-            List<StatusEffect> debuffs = Owner.StatusEffects.Where(e => e.IsDebuff).ToList();
+            List<StatusEffect> debuffs = Owner.StatusEffects.Where(e => !(e.IsBuff)).ToList();
             foreach (StatusEffect debuff in debuffs)
             {
                 //not sure if we need this for debuffs, or at all honestly.
@@ -81,7 +81,9 @@ namespace epic8.PassiveSkills
             Owner.AddStatusEffect(new Immunity(1, Owner));
 
             //1 turn defense buff
-            StatChange defBuff = new StatChange("Increase Defense", 1, true, false, [new StatModifier(StatType.Defense, 0.6f, 0f)]);
+            StatChange defBuff = new StatChange("Increase Defense", 1, "Increase Defense", true, TickTime.StartOfTurn,
+                [new StatModifier(StatType.Defense, 0.6f, 0f)])
+            { AppliedBy = Owner};
             Owner.AddStatusEffect(defBuff);
 
             Console.WriteLine($"{Owner.Name} has received Immunity and Increase Defense buffs for 1 turn.");

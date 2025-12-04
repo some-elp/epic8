@@ -11,7 +11,7 @@ namespace epic8.BuffsDebuffs
     {
 
         public DecreaseHitChance(int duration, Character appliedBy)
-            : base("Decrease Hit Chance", duration, false, true)
+            : base("Decrease Hit Chance", duration, "Decrease Hit Chance", false, TickTime.EndOfTurn)
         {
             AppliedBy = appliedBy;
         }

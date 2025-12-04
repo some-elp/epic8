@@ -25,7 +25,7 @@ namespace epic8.Skills
             foreach (Character target in skillContext.GetTargets(TargetType))
             {
                 //get list of X debuffs on the target, should be in application order.
-                List<StatusEffect> debuffs = target.StatusEffects.Where(e => e.IsDebuff).Take(_amount).ToList();
+                List<StatusEffect> debuffs = target.StatusEffects.Where(e => !(e.IsBuff)).Take(_amount).ToList();
                 foreach(StatusEffect debuff in debuffs)
                 {
                     //not sure if we need this for debuffs, or at all honestly.

@@ -78,9 +78,12 @@ namespace epic8.Loaders
             StatChange statChange = new StatChange(
                 d.Name,
                 d.Duration,
+                d.Category,
                 d.IsBuff,
-                d.IsDebuff,
-                modList.ToArray());
+                d.TickTime,
+                modList,
+                d.IsUndispellable,
+                d.Priority);
 
             EffectTargetType TargetType;
             Enum.TryParse(data.EffectTargetType, out TargetType);

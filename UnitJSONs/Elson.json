@@ -44,8 +44,8 @@
                     "StatChange": {
                         "Name": "Decrease Attack",
                         "Duration": 1,
+                        "Category": "Decrease Attack",
                         "IsBuff": false,
-                        "IsDebuff": true,
                         "StatModifiers": [
                             {
                                 "Stat": "Attack",
@@ -105,8 +105,8 @@
                     "StatChange": {
                         "Name": "Increase Attack",
                         "Duration": 2,
+                        "Category": "Increase Attack",
                         "IsBuff": true,
-                        "IsDebuff": false,
                         "StatModifiers": [
                             {
                                 "Stat": "Attack",
@@ -122,12 +122,12 @@
                     "StatChange": {
                         "Name": "Increase Defense",
                         "Duration": 2,
+                        "Category": "Increase Defense",
                         "IsBuff": true,
-                        "IsDebuff": false,
                         "StatModifiers": [
                             {
                                 "Stat": "Defense",
-                                "PercentChance": 0.6,
+                                "PercentChange": 0.6,
                                 "FlatChange": 0
                             }
                         ]

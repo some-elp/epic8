@@ -87,7 +87,10 @@ namespace epic8.Loaders
         public string Name { get; set; }
         public int Duration { get; set; }
         public bool IsBuff { get; set; }
-        public bool IsDebuff { get; set; }
+        public TickTime TickTime { get; set; }
+        public bool IsUndispellable {  get; set; }
+        public string Category { get; set; }
+        public int Priority { get; set; }
         public List<StatModifierData> StatModifiers { get; set; }
         public float Chance { get; set; }
     }

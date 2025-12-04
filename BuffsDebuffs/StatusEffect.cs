@@ -7,27 +7,49 @@ using System.Threading.Tasks;
 
 namespace epic8.BuffsDebuffs
 {
+    public enum TickTime
+    {
+        StartOfTurn,
+        EndOfTurn
+    }
+
     public abstract class StatusEffect
     {
         //how long does this effect last
         public int Duration { get; set; }
 
+        //is this a buff or debuff
         public bool IsBuff { get; }
 
-        public bool IsDebuff { get; }
+        //usually false, used for undispellable buffs
+        public bool IsUndispellable { get; }
 
+        //name of the buff (ex. Increase Attack)
         public string Name { get; }
-
+        
+        //maybe not useful
         public Character? AppliedBy { get; set; }
 
+        //Was this debuff applied this turn?
         public bool AppliedThisTurn { get; set; } = true;
 
-        public StatusEffect(string name, int duration, bool isBuff = false, bool isDebuff = false)
+        //used to determine if we already have this type of buff (GAB and Increase Attack are the same)
+        public string Category { get; set; }
+
+        //used to determine which buff to keep when 2 buffs have the same category
+        public int Priority { get; set; }
+
+        public TickTime TickTime { get; set; }
+
+        public StatusEffect(string name, int duration, string category, bool isBuff, TickTime tickTime, bool isUndispellable = false, int priority = 0)
         {
             Name = name;
             Duration = duration;
+            Category = category;
             IsBuff = isBuff;
-            IsDebuff = isDebuff;
+            TickTime = tickTime;
+            IsUndispellable = isUndispellable;
+            Priority = priority;
         }
 
         //Effects that happen immediately when the buff/debuff is applied

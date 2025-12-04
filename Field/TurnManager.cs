@@ -12,9 +12,9 @@ namespace epic8.Field
     {
         public List<Character> units;
 
-        private int _turnCount = 1;
-
         private bool _firstPrint = true;
+
+        public int TurnCount { get; set; } = 1;
         public TurnManager(List<Character> characters)
         {
             units = characters;
@@ -43,7 +43,7 @@ namespace epic8.Field
                 Console.WriteLine();
             }
 
-            Console.WriteLine($"--- Turn {_turnCount} ---");
+            Console.WriteLine($"--- Turn {TurnCount} ---");
             foreach (Character unit in units.Where(character => character.isAlive).OrderBy(u => u.CRMeter))
             {
                 Console.WriteLine($" - {unit}");
@@ -85,7 +85,7 @@ namespace epic8.Field
                 if (readyUnits.Any())
                 {
                     PrintTimeline();
-                    _turnCount++;
+                    TurnCount++;
                     //Get the first one in the list
                     Character readyUnit = readyUnits.First();
                     readyUnit.CRMeter = 0f;

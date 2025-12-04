@@ -62,6 +62,19 @@ namespace epic8.Field
 
                 //Acting unit takes its turn.
                 acting.takeTurn(allies, enemies);
+                /* check for extra turns. Most likely will have to move to an int for multiple extra turns
+                 * as well as a loop to check extra turns for all characters.
+                 */
+                if (acting.ExtraTurns > 0)
+                {
+                    acting.ExtraTurns -= 1;
+
+                    _turnManager.PrintTimeline();
+                    _turnManager.TurnCount++;
+                    Console.WriteLine($"{acting.Name} takes an extra turn.");
+
+                    acting.takeTurn(allies, enemies);
+                }
 
                 //Check to see if any units have died after this turn.
                 foreach ( Character unit in _team1.Concat(_team2))

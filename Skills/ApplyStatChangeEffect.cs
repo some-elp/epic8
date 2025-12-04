@@ -28,7 +28,7 @@ namespace epic8.Skills
             foreach (Character target  in skillContext.GetTargets(TargetType))
             {
                 //If we missed, don't apply the effects
-                if (_statChangeTemplate.IsDebuff)
+                if (!(_statChangeTemplate.IsBuff))
                 {
                     if (skillContext.HitResults.TryGetValue(target, out HitType hit))
                     {

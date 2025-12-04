@@ -21,6 +21,12 @@ namespace epic8.Calcs
             //target's defense
             float targetDefense = target.GetEffectiveStats().Defense;
 
+            //Account for defense pen?
+            if(dmgEffect.defPen > 0)
+            {
+                targetDefense *= dmgEffect.defPen;
+            }
+
             //the 3 basic damage scaling stats
             float attack = skillContext.User.GetEffectiveStats().Attack;
             float hp = skillContext.User.GetEffectiveStats().Hp;

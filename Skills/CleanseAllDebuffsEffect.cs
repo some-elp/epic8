@@ -22,7 +22,7 @@ namespace epic8.Skills
             foreach (Character target in skillContext.GetTargets(TargetType))
             {
                 //get list of all debuffs on the target
-                List<StatusEffect> debuffs = target.StatusEffects.Where(e => e.IsDebuff).ToList();
+                List<StatusEffect> debuffs = target.StatusEffects.Where(e => !(e.IsBuff)).ToList();
                 foreach (StatusEffect debuff in debuffs)
                 {
                     //not sure if we need this for debuffs, or at all honestly.

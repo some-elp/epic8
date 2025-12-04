@@ -24,7 +24,7 @@ namespace epic8.Skills
             foreach(Character target in skillContext.GetTargets(TargetType))
             {
                 //get list of all debuffs on the target
-                List<StatusEffect> debuffs = target.StatusEffects.Where(e => e.IsDebuff).ToList();
+                List<StatusEffect> debuffs = target.StatusEffects.Where(e => !(e.IsBuff)).ToList();
                 foreach (StatusEffect debuff in debuffs)
                 {
                     //subtract duration from debuffs
@@ -37,6 +37,7 @@ namespace epic8.Skills
                         target.StatusEffects.Remove(debuff);
                     }
                 }
+                Console.WriteLine($"All debuff durations on {target.Name} were reduced by {_duration} turns.");
             }
         }
     }

@@ -48,8 +48,8 @@
 					"StatChange": {
 						"Name": "Decrease Speed",
 						"Duration": 2,
+						"Category": "Decrease Speed",
 						"IsBuff": false,
-						"IsDebuff": true,
 						"StatModifiers": [
 							{
 								"Stat": "Speed",

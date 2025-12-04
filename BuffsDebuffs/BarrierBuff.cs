@@ -13,7 +13,7 @@ namespace epic8.BuffsDebuffs
         public float Remaining { get; set; }
 
         public BarrierBuff(int duration, float amount, Character appliedBy)
-            : base("Barrier", duration, true, false)
+            : base("Barrier", duration, "Barrier", true, TickTime.EndOfTurn)
         {
             Remaining = amount;
             AppliedBy = appliedBy;
