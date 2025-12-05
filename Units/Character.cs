@@ -269,7 +269,7 @@ namespace epic8.Units
 
         }
 
-        public void takeTurn(List<Character> allies, List<Character> enemies)
+        public void takeTurn(BattleContext context)
         {
             //Check start of turn ticking buffs/debuffs
             /* (var statusEffect in StatusEffects.Where(s => s.TickTime == TickTime.StartOfTurn))
@@ -287,11 +287,11 @@ namespace epic8.Units
             //Determine whether the player gets to control this unit or not.
             if (Control == ControlType.NPC)
             {
-                NPCTurn(allies, enemies);
+                NPCTurn(context);
             }
             else
             {
-                PlayerTurn(allies, enemies);
+                PlayerTurn(context);
             }
 
 
@@ -321,7 +321,7 @@ namespace epic8.Units
             RemoveExpiredEffects();
 
             //mark appliedthisturn false for all buffs/debuffs
-            foreach (Character character in allies.Concat(enemies))
+            foreach (Character character in context.getAllCharacters())
             {
                 foreach (StatusEffect statusEffect in character.StatusEffects)
                 {
@@ -330,7 +330,7 @@ namespace epic8.Units
             }
         }
 
-        private void NPCTurn(List<Character> allies, List<Character> enemies)
+        private void NPCTurn(BattleContext context)
         {
             //Shouldn't happen, All Characters should have their behavior specified
             if (NPCController == null)
@@ -340,16 +340,16 @@ namespace epic8.Units
             else
             {
                 //Determine what skill and target the NPC is choosing
-                var (skill, target) = NPCController.ChooseAction(this, allies, enemies);
+                var (skill, target) = NPCController.ChooseAction(this, context);
                 if (target == null)
                 {
                     return;
                 }
-                skill.UseSkill(this, target, allies, enemies);
+                skill.UseSkill(this, target, context);
             }
         }
 
-        private void PlayerTurn(List<Character> allies, List<Character> enemies)
+        private void PlayerTurn(BattleContext context)
         {
             //Show skills of the current unit
             for (int i=0; i < Skills.Count; i++)
@@ -390,7 +390,8 @@ namespace epic8.Units
             Skill skill = Skills[skillChoice];
 
             //List only enemies that are alive
-            List<Character> aliveEnemies = enemies.Where(e => e.isAlive).ToList();
+            List<Character> aliveEnemies = context.getEnemiesOf(this).Where(e => e.isAlive).ToList();
+            List<Character> allies = context.getAlliesOf(this);
 
             if (skill.TargetType == TargetType.SingleEnemy)
             {
@@ -421,7 +422,7 @@ namespace epic8.Units
                 }
 
                 Character target = aliveEnemies[targetChoice];
-                skill.UseSkill(this, target, allies, enemies);
+                skill.UseSkill(this, target, context);
             }
             else if(skill.TargetType == TargetType.SingleAlly)
             {
@@ -452,12 +453,12 @@ namespace epic8.Units
                 }
 
                 Character target = allies[targetChoice];
-                skill.UseSkill(this, target, allies, enemies);
+                skill.UseSkill(this, target, context);
             }
             else if (skill.TargetType == TargetType.Self)
             {
                 //Don't need the user to pick a target in this case.
-                skill.UseSkill(this, this, allies, enemies);
+                skill.UseSkill(this, this, context);
             }
         }
 

@@ -1,4 +1,6 @@
-﻿using epic8.Calcs;
+﻿using epic8.BuffsDebuffs;
+using epic8.Calcs;
+using epic8.Field;
 using epic8.Skills;
 using epic8.Units;
 using System;
@@ -30,10 +32,19 @@ namespace epic8.NPCBehavior
 
         private readonly Random rng = new Random();
 
-        public (Skill, Character target) ChooseAction(Character user, List<Character> allies, List<Character> enemies)
+        public (Skill, Character target) ChooseAction(Character user, BattleContext context)
         {
             //just pick the first skill
             Skill skill = user.Skills.First();
+
+            //If we have provoke debuff
+            if(user.StatusEffects.Any(e => e is Provoke))
+            {
+                //forced to select basic attack
+                skill = user.Skills[0];
+                Character target = user.StatusEffects.OfType<Provoke>().FirstOrDefault().AppliedBy;
+                return (skill, target);
+            }
 
             //loop through skills in reverse
             for(int i = user.Skills.Count; i > 0; i -= 1)
@@ -49,7 +60,7 @@ namespace epic8.NPCBehavior
             if (skill.TargetType == TargetType.SingleEnemy)
             {
                 //grab the list of alive enemies
-                List<Character> aliveEnemies = enemies.Where(e => e.isAlive).ToList();
+                List<Character> aliveEnemies = context.getEnemiesOf(user).Where(e => e.isAlive).ToList();
 
                 //list of enemies we have elemental advantage against to be populated
                 List<Character> eleAdvantage = [];
@@ -95,7 +106,7 @@ namespace epic8.NPCBehavior
             else if(skill.TargetType == TargetType.SingleAlly)
             {
                 //For now, just pick any random alive ally
-                List<Character> aliveAllies = allies.Where(c => c.isAlive).ToList();
+                List<Character> aliveAllies = context.getAlliesOf(user).Where(c => c.isAlive).ToList();
                 return (skill, aliveAllies[rng.Next(aliveAllies.Count)]);
             }
             else

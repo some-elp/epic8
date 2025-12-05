@@ -1,4 +1,5 @@
 ﻿using epic8.Calcs;
+using epic8.Field;
 using epic8.Skills;
 using epic8.Units;
 using System;
@@ -41,15 +42,15 @@ namespace epic8.NPCBehavior
             _s3Threshold = s3Threshold;
         }
 
-        public (Skill, Character target) ChooseAction(Character user, List<Character> allies, List<Character> enemies)
+        public (Skill, Character target) ChooseAction(Character user, BattleContext context)
         {
             //See if we are healing anyone.
-            Skill? healSkill = ChooseHealingSkill(user, allies);
+            Skill? healSkill = ChooseHealingSkill(user, context.getAlliesOf(user));
 
             //Are we using a healing skill?
             if(healSkill != null)
             {
-                Character healTarget = ChooseHealingTarget(healSkill, allies);
+                Character healTarget = ChooseHealingTarget(healSkill, context.getAlliesOf(user));
                 return (healSkill,  healTarget);
             }
 
@@ -58,7 +59,7 @@ namespace epic8.NPCBehavior
 
 
             //grab the list of alive enemies
-            List<Character> aliveEnemies = enemies.Where(e => e.isAlive).ToList();
+            List<Character> aliveEnemies = context.getEnemiesOf(user).Where(e => e.isAlive).ToList();
 
             //list of enemies we have elemental advantage against to be populated
             List<Character> eleAdvantage = [];

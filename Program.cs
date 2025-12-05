@@ -64,7 +64,7 @@ namespace epic8
                 new DamageEffect(0.6f, 0f, 1.15f, 1f, 1.3f, (ctx,t) => 1.0f, (ctx, t) => 0f, EffectTargetType.AllEnemies){defPen = 0.5f},
                 new IncreaseSkillCooldownEffect(1, EffectTargetType.AllEnemies),
                 new CRPushEffect(0.15f, EffectTargetType.AllAllies),
-                new GainLoseFightingSpirit(50f, EffectTargetType.Self)]));
+                new GainLoseFightingSpirit(50.0f, EffectTargetType.Self)]));
 
             //Cermia S1, S2, and S3
             Cermia.Skills.Add(new Skill("Playing with Fire", "blah", 1, TargetType.SingleEnemy,

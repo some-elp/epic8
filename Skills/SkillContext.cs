@@ -1,4 +1,5 @@
 ﻿using epic8.Calcs;
+using epic8.Field;
 using epic8.Units;
 using System;
 using System.Collections.Generic;
@@ -14,19 +15,17 @@ namespace epic8.Skills
         public Character Target { get; }
         public Skill SkillUsed { get; }
 
-        public List<Character> Allies { get; }
-        public List<Character> Enemies { get; }
+        public BattleContext BattleContext { get; }
 
         //Keep track of what kind of hit was made on each target
         public Dictionary<Character, HitType> HitResults { get; } = new Dictionary<Character, HitType>();
 
-        public SkillContext(Character user, Character target, Skill skillUsed, List<Character> allies, List<Character> enemies)
+        public SkillContext(Character user, Character target, Skill skillUsed, BattleContext context)
         {
             User = user;
             Target = target;
             SkillUsed = skillUsed;
-            Allies = allies;
-            Enemies = enemies;
+            BattleContext = context;
         }
 
         public List<Character> GetTargets(EffectTargetType effectTargetType)
@@ -39,9 +38,9 @@ namespace epic8.Skills
                 case EffectTargetType.SkillTarget:
                     return [Target];
                 case EffectTargetType.AllAllies:
-                    return Allies.Where(a => a.isAlive).ToList();
+                    return BattleContext.getAlliesOf(User).Where(a => a.isAlive).ToList();
                 case EffectTargetType.AllEnemies:
-                    return Enemies.Where(e => e.isAlive).ToList();
+                    return BattleContext.getAlliesOf(User).Where(e => e.isAlive).ToList();
                 default:
                     throw new NotImplementedException($"Target type {effectTargetType} not implemented.");
             }

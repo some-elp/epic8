@@ -39,20 +39,8 @@ namespace epic8.Field
             {
                 //Get next acting unit
                 Character acting = _turnManager.GetNextTurn();
-                List<Character> enemies;
-                List<Character> allies;
-
-                //Decide which group is considered the enemies
-                if (_team1.Contains(acting))
-                {
-                    enemies = _team2;
-                    allies = _team1;
-                }
-                else
-                {
-                    enemies = _team1;
-                    allies = _team2;
-                }
+                List<Character> enemies = context.getEnemiesOf(acting);
+                List<Character> allies = context.getAlliesOf(acting);
 
                 //Loop again if we somehow picked up a dead unit to take the turn.
                 if (!acting.isAlive)
@@ -61,7 +49,19 @@ namespace epic8.Field
                 }
 
                 //Acting unit takes its turn.
-                acting.takeTurn(allies, enemies);
+                acting.takeTurn(context);
+                //Check to see if any units have died after this turn.
+                foreach (Character unit in _team1.Concat(_team2))
+                {
+                    if (unit.CurrentHP <= 0)
+                    {
+                        unit.isAlive = false;
+                        foreach (PassiveSkill passive in unit.Passives)
+                        {
+                            passive.Dispose();
+                        }
+                    }
+                }
                 /* check for extra turns. Most likely will have to move to an int for multiple extra turns
                  * as well as a loop to check extra turns for all characters.
                  */
@@ -73,7 +73,7 @@ namespace epic8.Field
                     _turnManager.TurnCount++;
                     Console.WriteLine($"{acting.Name} takes an extra turn.");
 
-                    acting.takeTurn(allies, enemies);
+                    acting.takeTurn(context);
                 }
 
                 //Check to see if any units have died after this turn.

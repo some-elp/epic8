@@ -9,42 +9,47 @@ namespace epic8.Field
 {
     public class BattleContext
     {
-        private readonly List<Character> _team1;
-        private readonly List<Character> _team2;
+        public List<Character> Team1;
+        public List<Character> Team2;
 
         public BattleContext(List<Character> team1, List<Character> team2)
         {
-            _team1 = team1;
-            _team2 = team2;
+            Team1 = team1;
+            Team2 = team2;
         }
 
         public List<Character> getAlliesOf(Character character)
         {
-            if (_team1.Contains(character))
+            if (Team1.Contains(character))
             {
-                return _team1;
+                return Team1;
             }
             else
             {
-                return _team2;
+                return Team2;
             }
         }
 
         public List<Character> getEnemiesOf(Character character)
         {
-            if (_team1.Contains(character))
+            if (Team1.Contains(character))
             {
-                return _team2;
+                return Team2;
             }
             else
             {
-                return _team1;
+                return Team1;
             }
+        }
+
+        public List<Character> getAllCharacters()
+        {
+            return Team1.Concat(Team2).ToList();
         }
 
         public void InitializePassives()
         {
-            foreach(Character character in _team1.Concat(_team2))
+            foreach(Character character in Team1.Concat(Team2))
             {
 
                 foreach (var passive in character.Passives)

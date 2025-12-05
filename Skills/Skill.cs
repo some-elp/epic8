@@ -41,10 +41,10 @@ namespace epic8.Skills
             Effects = effects;
         }
 
-        public void UseSkill(Character user, Character target, List<Character> allies, List<Character> enemies)
+        public void UseSkill(Character user, Character target, BattleContext context)
         {
             //useful to pass information around
-            SkillContext skillContext = new SkillContext(user, target, this, allies, enemies);
+            SkillContext skillContext = new SkillContext(user, target, this, context);
 
             Console.WriteLine($"{user.Name} uses {this.Name} targeting {target.Name}");
 
