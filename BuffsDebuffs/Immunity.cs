@@ -10,7 +10,7 @@ namespace epic8.BuffsDebuffs
     public class Immunity : StatusEffect
     {
         public Immunity(int duration, Character appliedBy)
-    : base("Immunity", duration, "Immunity", true, TickTime.EndOfTurn)
+            : base("Immunity", duration, "Immunity", true, TickTime.EndOfTurn)
         {
             AppliedBy = appliedBy;
         }

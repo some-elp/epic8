@@ -20,6 +20,13 @@ namespace epic8.Skills
         //Keep track of what kind of hit was made on each target
         public Dictionary<Character, HitType> HitResults { get; } = new Dictionary<Character, HitType>();
 
+        //For passives that prevent critting
+        public bool CanCrit { get; set; } = true;
+        public bool CanCrush { get; set; } = true;
+
+        //For passives that automatically crit
+        public bool AlwaysCrit { get; set; } = false;
+
         public SkillContext(Character user, Character target, Skill skillUsed, BattleContext context)
         {
             User = user;
@@ -40,7 +47,7 @@ namespace epic8.Skills
                 case EffectTargetType.AllAllies:
                     return BattleContext.getAlliesOf(User).Where(a => a.isAlive).ToList();
                 case EffectTargetType.AllEnemies:
-                    return BattleContext.getAlliesOf(User).Where(e => e.isAlive).ToList();
+                    return BattleContext.getEnemiesOf(User).Where(e => e.isAlive).ToList();
                 default:
                     throw new NotImplementedException($"Target type {effectTargetType} not implemented.");
             }

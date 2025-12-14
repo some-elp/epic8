@@ -8,10 +8,12 @@ using System.Threading.Tasks;
 
 namespace epic8.PassiveSkills
 {
-    public abstract class PassiveSkill
+    public abstract class Passive
     {
         public Character Owner;
         public BattleContext BattleContext;
+
+        public virtual bool CanSeal => true;
 
         public void Initialize (Character owner, BattleContext battleContext)
         {

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace epic8.PassiveSkills
 {
-    public class DesignerLilibetS2Passive : PassiveSkill
+    public class DesignerLilibetS2Passive : Passive
     {
         //subscribe to relevant events
         public override void Initialize()

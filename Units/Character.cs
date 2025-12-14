@@ -1,5 +1,6 @@
 ﻿using epic8.BuffsDebuffs;
 using epic8.Calcs;
+using epic8.EffectModifiers;
 using epic8.Field;
 using epic8.NPCBehavior;
 using epic8.PassiveSkills;
@@ -46,18 +47,34 @@ namespace epic8.Units
         //List of buffs/debuffs affecting this character
         public List<StatusEffect> StatusEffects { get; } = [];
 
+        //List of non buff/debuff stat modiifiers (artifact, passive, etc)
+        public List<StatModifier> OtherStatModifiers { get; set; } = [];
+
         //List of passives owned by this character
-        public List<PassiveSkill> Passives { get; set; } = [];
+        public List<Passive> Passives { get; set; } = [];
+
+        //List of EffectChanceModifiers owned by this character
+        //Maybe move this from Character into the skilleffect classes?
+        public List<IEffectChanceModifier> EffectChanceModifiers { get; set; } = [];
 
         //Does this character have an extra turn to take?
         public int ExtraTurns { get; set; } = 0;
-
 
         //How much fighting spirit do we have (Max 100, not useful on every unit)
         public float FightingSpirit { get; set; } = 0;
 
         //How much focus do we have (Max 5, not useful on every unit)
         public float Focus { get; set; } = 0;
+
+        //Critical Hit Resistance
+        public float CriticalHitResistance { get; set; } = 0;
+
+        //Evasion
+        public float Evasion { get; set; } = 0;
+
+        //Penetration Resistance
+        public float PenetrationResistance { get; set; } = 0;
+
 
         public Character(string name, Element element, string role, Stats baseStats, List<Skill> skills, ControlType control, INPCController? npc = null)
         {
@@ -80,6 +97,7 @@ namespace epic8.Units
             if (existingEffect == null)
             {
                 StatusEffects.Add(effect);
+                effect.OnApply(this);
                 return;
             }
 
@@ -91,6 +109,7 @@ namespace epic8.Units
                 StatusEffects.Remove(existingEffect);
                 //Add the new effect to the list
                 StatusEffects.Add(effect);
+                effect.OnApply(this);
             }
             //new effect is the same prio as new one (most likely exact same buff)
             else if (effect.Priority == existingEffect.Priority)
@@ -100,6 +119,7 @@ namespace epic8.Units
                     //If the new buff's duration is higher we add a new buff
                     StatusEffects.Remove(existingEffect);
                     StatusEffects.Add(effect);
+                    effect.OnApply(this);
                 }
                 else
                 {
@@ -159,9 +179,9 @@ namespace epic8.Units
             float dualAttackChancePercent = 0f;
 
             //Go through our list of statuseffects, and get the total stat changes (additive)
-            foreach (var eff in StatusEffects)
+            foreach (StatusEffect eff in StatusEffects)
             {
-                foreach (var mod in eff.GetStatModifiers())
+                foreach (StatModifier mod in eff.GetStatModifiers())
                 {
                     if(mod.Stat == StatType.Attack)
                     {
@@ -204,7 +224,50 @@ namespace epic8.Units
                         Console.WriteLine("Stat not identifiable.");
                     }
                 }
+            }
 
+            foreach(StatModifier mod in OtherStatModifiers)
+            {
+                if (mod.Stat == StatType.Attack)
+                {
+                    attackPercent += mod.PercentChange;
+                }
+                else if (mod.Stat == StatType.Defense)
+                {
+                    defensePercent += mod.PercentChange;
+                }
+                else if (mod.Stat == StatType.HP)
+                {
+                    hpPercent += mod.PercentChange;
+                }
+                else if (mod.Stat == StatType.Speed)
+                {
+                    spdPercent += mod.PercentChange;
+                }
+                else if (mod.Stat == StatType.CritChance)
+                {
+                    critPercent += mod.PercentChange;
+                }
+                else if (mod.Stat == StatType.CritDamage)
+                {
+                    critDamagePercent += mod.PercentChange;
+                }
+                else if (mod.Stat == StatType.Effectiveness)
+                {
+                    effectivenessPercent += mod.PercentChange;
+                }
+                else if (mod.Stat == StatType.EffectResistance)
+                {
+                    effectResistancePercent += mod.PercentChange;
+                }
+                else if (mod.Stat == StatType.DualAttackChance)
+                {
+                    dualAttackChancePercent += mod.PercentChange;
+                }
+                else
+                {
+                    Console.WriteLine("Stat not identifiable.");
+                }
             }
 
             //Apply our stat changes
@@ -256,7 +319,7 @@ namespace epic8.Units
             if( CurrentHP <= 0 )
             {
                 isAlive = false;
-                foreach (PassiveSkill passive in Passives)
+                foreach (Passive passive in Passives)
                 {
                     passive.Dispose();
                 }

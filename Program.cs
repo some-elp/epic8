@@ -1,5 +1,6 @@
 ﻿using epic8.BuffsDebuffs;
 using epic8.Calcs;
+using epic8.EffectModifiers;
 using epic8.Field;
 using epic8.Loaders;
 using epic8.NPCBehavior;
@@ -26,7 +27,7 @@ namespace epic8
                 "Decrease Defense",
                 false,
                 TickTime.EndOfTurn,
-                [new StatModifier(StatType.Defense, -0.7f, 0f)]);
+                [new StatModifier(StatType.Defense, -0.7f)]);
             //2 turn GAB
             StatChange greaterAtk = new StatChange(
                 "Greater Attack Buff",
@@ -34,16 +35,18 @@ namespace epic8
                 "Increase Attack",
                 true,
                 TickTime.EndOfTurn,
-                [new StatModifier(StatType.Attack, 0.75f, 0f)]);
+                [new StatModifier(StatType.Attack, 0.75f)]);
 
             //Stats objects for non-JSON characters in this test
             var TieriaStats = new Stats(2500f, 1000f, 10000f, 190f, 100f, 250f, 0f, 0f, 3f);
             var DesignerLilibetStats = new Stats(1500f, 2000f, 17000f, 220f, 100f, 280f, 0f, 0f, 3f);
             var CermiaStats = new Stats(4000f, 1000f, 10000f, 202f, 100f, 300f, 0f, 0f, 3f);
+            var SenyaStats = new Stats(5000f, 1300f, 15000f, 182f, 15f, 150f, 0f, 0f, 3f);
 
             Character Tieria = new Character("Tieria", Element.Fire, "Warrior", TieriaStats, [], ControlType.NPC, new BasicNPC());
             Character DesignerLilibet = new Character("Designer Lilibet", Element.Dark, "Warrior", DesignerLilibetStats, [], ControlType.NPC, new BasicNPC());
             Character Cermia = new Character("Cermia", Element.Fire, "Warrior", CermiaStats, [], ControlType.NPC, new BasicNPC());
+            Character Senya = new Character("Senya", Element.Earth, "Knight", SenyaStats, [], ControlType.NPC, new BasicNPC());
 
             //Tieria S1, S2, and S3
             Tieria.Skills.Add(new Skill("Demon Cutter", "bla", 1, TargetType.SingleEnemy,
@@ -77,6 +80,18 @@ namespace epic8
             Cermia.Skills.Add(new Skill("All-In!", "blah", 5, TargetType.SingleEnemy,
                 [new DamageEffect(1.15f, 0f, 0f, 0.9f, 1.4f, (ctx, t) => 1.0f, (ctx, t) => 0f, EffectTargetType.SkillTarget) { defPen = 0.5f}]));
 
+            //Senya S1, S2, and S3, along with the provoke modifier
+            Senya.Skills.Add(new Skill("Spear of Vengeance", "a", 1, TargetType.SingleEnemy,
+                [new DamageEffect(0.95f, 0f, 0f, 1f, 1.3f, (ctx, t) => 1f, (ctx, t) => 0f, EffectTargetType.SkillTarget),
+                new ApplyProvoke(1, EffectTargetType.SkillTarget, 0.75f)]));
+            Senya.Passives.Add(new SenyaS2Passive());
+            Senya.Skills.Add(new Skill("Dragon Slayer's Strike", "b", 4, TargetType.SingleEnemy,
+                [new DamageEffect(1.5f, 0f, 0f, 1.1f, 1.2f, (ctx, t) => 1.0f, (ctx, t) => 0f, EffectTargetType.AllEnemies),
+                new ApplyDecreaseHitChance(2, EffectTargetType.AllEnemies),
+                new ApplyProvoke(1, EffectTargetType.AllEnemies, 0.85f),
+                new ApplyCounterattackBuff(EffectTargetType.Self, 3)]));
+            Senya.EffectChanceModifiers.Add(new SenyaS1ProvokeModifier());
+
             //CharacterLoader test
             Character Aither = CharacterLoader.LoadFromFile("UnitJSONS/Aither.json");
             Character Bask = CharacterLoader.LoadFromFile("UnitJSONS/Bask.json");
@@ -84,8 +99,8 @@ namespace epic8
 
 
             //Put the characters into teams
-            List<Character> team1 = new List<Character> { Tieria, Aither };
-            List<Character> team2 = new List<Character> { Elson, Cermia };
+            List<Character> team1 = new List<Character> { Bask, Elson };
+            List<Character> team2 = new List<Character> { Aither, Senya };
 
             //Create the match
             Battle battle = new Battle(team1, team2);

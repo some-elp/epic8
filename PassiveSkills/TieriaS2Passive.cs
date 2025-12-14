@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace epic8.PassiveSkills
 {
-    public class TieriaS2Passive : PassiveSkill
+    public class TieriaS2Passive : Passive
     {
         //subscribe to relevant events
         public override void Initialize()
@@ -25,7 +25,7 @@ namespace epic8.PassiveSkills
 
         private void HandleAttack(OnAttackResult e)
         {
-            if(e.Attacker != Owner || e.Hit == HitType.Miss)
+            if(e.skillContext.User != Owner || e.Hit == HitType.Miss)
             {
                 return;
             }

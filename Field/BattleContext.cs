@@ -12,6 +12,9 @@ namespace epic8.Field
         public List<Character> Team1;
         public List<Character> Team2;
 
+        //Unit whose turn it is
+        public Character? ActingUnit { get; set; }
+
         public BattleContext(List<Character> team1, List<Character> team2)
         {
             Team1 = team1;

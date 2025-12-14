@@ -4,6 +4,7 @@ using epic8.Units;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,6 +25,15 @@ namespace epic8.Skills
 
         public void ApplyEffect(SkillContext skillContext)
         {
+
+            float finalChance = _chance;
+
+            //Maybe move this from Character into the skilleffect classes?
+            foreach (var mod in skillContext.User.EffectChanceModifiers)
+            {
+                finalChance = mod.ModifyEffect(this, skillContext, finalChance);
+            }
+
             foreach (Character target in skillContext.GetTargets(TargetType))
             {
                 //If we missed, don't apply the effects
@@ -34,7 +44,7 @@ namespace epic8.Skills
                         continue;
                     }
                 }
-                if (!DebuffCalc.SkillRollSucceeds(_chance))
+                if (!DebuffCalc.SkillRollSucceeds(finalChance))
                 {
                     //move to next target if we didn't proc the debuff
                     continue;
@@ -53,7 +63,7 @@ namespace epic8.Skills
                     continue;
                 }
                 target.AddStatusEffect(new Provoke(_duration, skillContext.User));
-                Console.WriteLine($"{target.Name} has been affected by Provoke for {_duration} turns.");
+                Console.WriteLine($"{target.Name} has been affected by Provoke from {skillContext.User.Name} for {_duration} turns.");
 
             }
         }

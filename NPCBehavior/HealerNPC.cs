@@ -1,4 +1,5 @@
-﻿using epic8.Calcs;
+﻿using epic8.BuffsDebuffs;
+using epic8.Calcs;
 using epic8.Field;
 using epic8.Skills;
 using epic8.Units;
@@ -44,8 +45,20 @@ namespace epic8.NPCBehavior
 
         public (Skill, Character target) ChooseAction(Character user, BattleContext context)
         {
+
+            Skill skill = user.Skills.First();
+            //If we have provoke debuff
+            if (user.StatusEffects.Any(e => e is Provoke))
+            {
+                //forced to select basic attack
+                skill = user.Skills[0];
+                Character target = user.StatusEffects.OfType<Provoke>().FirstOrDefault().AppliedBy;
+                return (skill, target);
+            }
+
             //See if we are healing anyone.
             Skill? healSkill = ChooseHealingSkill(user, context.getAlliesOf(user));
+
 
             //Are we using a healing skill?
             if(healSkill != null)
@@ -53,9 +66,6 @@ namespace epic8.NPCBehavior
                 Character healTarget = ChooseHealingTarget(healSkill, context.getAlliesOf(user));
                 return (healSkill,  healTarget);
             }
-
-
-            Skill skill = user.Skills.First();
 
 
             //grab the list of alive enemies

@@ -49,6 +49,8 @@ namespace epic8.Skills
             //item1 = damage, item2 = hitType
             foreach (Character target in skillContext.GetTargets(TargetType))
             {
+                BattleEvents.PublishOnBeforeAttack(new OnBeforeAttack(skillContext));
+
                 //Grab how much damage we did to this target, and what kind of hit we made
                 Tuple<float, HitType> tuple = DamageCalc.CalculateDamage(skillContext, target, this);
 
@@ -60,8 +62,8 @@ namespace epic8.Skills
                 if (tuple.Item2 == HitType.Crushing)
                     Console.WriteLine($"{skillContext.User.Name} scores a crushing hit on {target.Name}!");
 
-                BattleEvents.PublishAttackResult(new OnAttackResult(skillContext.User, target, tuple.Item2));
                 target.TakeDamage(tuple.Item1);
+                BattleEvents.PublishAttackResult(new OnAttackResult(skillContext, target, tuple.Item2));
             }
 
         }

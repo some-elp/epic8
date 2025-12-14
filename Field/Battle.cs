@@ -49,6 +49,7 @@ namespace epic8.Field
                 }
 
                 //Acting unit takes its turn.
+                context.ActingUnit = acting;
                 acting.takeTurn(context);
                 //Check to see if any units have died after this turn.
                 foreach (Character unit in _team1.Concat(_team2))
@@ -56,7 +57,7 @@ namespace epic8.Field
                     if (unit.CurrentHP <= 0)
                     {
                         unit.isAlive = false;
-                        foreach (PassiveSkill passive in unit.Passives)
+                        foreach (Passive passive in unit.Passives)
                         {
                             passive.Dispose();
                         }
@@ -73,6 +74,7 @@ namespace epic8.Field
                     _turnManager.TurnCount++;
                     Console.WriteLine($"{acting.Name} takes an extra turn.");
 
+                    context.ActingUnit = acting;
                     acting.takeTurn(context);
                 }
 
@@ -82,7 +84,7 @@ namespace epic8.Field
                     if (unit.CurrentHP <= 0 )
                     {
                         unit.isAlive = false;
-                        foreach (PassiveSkill passive in unit.Passives)
+                        foreach (Passive passive in unit.Passives)
                         {
                             passive.Dispose();
                         }

@@ -24,7 +24,7 @@ namespace epic8.Calcs
             //Account for defense pen?
             if(dmgEffect.defPen > 0)
             {
-                targetDefense *= dmgEffect.defPen;
+                targetDefense *= (1 - dmgEffect.defPen);
             }
 
             //the 3 basic damage scaling stats
@@ -37,7 +37,7 @@ namespace epic8.Calcs
             float adv = ElementHelper.GetEleAdvantageMultiplier(advantage);
 
             //What kind of hit did we make
-            HitType hitType = HitCalc.DetermineHit(skillContext.User, target, advantage);
+            HitType hitType = HitCalc.DetermineHit(skillContext, target, advantage);
             float hitMod = HitCalc.GetHitMultiplier(hitType, skillContext.User);
 
             //used for skills with additional damage modifiers.
