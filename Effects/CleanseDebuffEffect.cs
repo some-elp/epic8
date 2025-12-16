@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace epic8.Skills
+namespace epic8.Effects
 {
-    public class CleanseDebuffEffect : ISkillEffect
+    public class CleanseDebuffEffect : IEffect
     {
         private readonly int _amount;
 
@@ -20,9 +20,9 @@ namespace epic8.Skills
             TargetType = targetType;
         }
 
-        public void ApplyEffect(SkillContext skillContext)
+        public void ApplyEffect(EffectContext effectContext)
         {
-            foreach (Character target in skillContext.GetTargets(TargetType))
+            foreach (Character target in effectContext.GetTargets(TargetType))
             {
                 //get list of X debuffs on the target, should be in application order.
                 List<StatusEffect> debuffs = target.StatusEffects.Where(e => !(e.IsBuff)).Take(_amount).ToList();

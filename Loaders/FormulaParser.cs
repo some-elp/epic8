@@ -1,4 +1,4 @@
-﻿using epic8.Skills;
+﻿using epic8.Effects;
 using epic8.Units;
 using NCalc;
 using System;
@@ -11,7 +11,7 @@ namespace epic8.Loaders
 {
     public static class FormulaParser
     {
-        public static Func<SkillContext, Character, float> Compile(string expression)
+        public static Func<EffectContext, Character, float> Compile(string expression)
         {
             //Should be an NCalc expression of the string
             var exp = new Expression(expression);
@@ -20,7 +20,7 @@ namespace epic8.Loaders
             return (ctx, t) =>
             {
                 exp.Parameters["target_hp"] = t.GetEffectiveStats().Hp;
-                exp.Parameters["user_hp"] = ctx.User.GetEffectiveStats().Hp;
+                exp.Parameters["user_hp"] = ctx.Source.GetEffectiveStats().Hp;
 
                 var result = exp.Evaluate();
                 return Convert.ToSingle(result);

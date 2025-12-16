@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace epic8.Skills
+namespace epic8.Effects
 {
-    public class DispelAllBuffsEffect : ISkillEffect
+    public class DispelAllBuffsEffect : IEffect
     {
         public EffectTargetType TargetType { get; }
         private readonly float _chance;
@@ -20,12 +20,12 @@ namespace epic8.Skills
             _chance = chance;
         }
 
-        public void ApplyEffect(SkillContext skillContext)
+        public void ApplyEffect(EffectContext effectContext)
         {
-            foreach (Character target in skillContext.GetTargets(TargetType))
+            foreach (Character target in effectContext.GetTargets(TargetType))
             {
                 //If we missed, don't apply the effects.
-                if (skillContext.HitResults.TryGetValue(target, out HitType hit))
+                if (effectContext.HitResults.TryGetValue(target, out HitType hit))
                 {
                     if (hit == HitType.Miss)
                     {
@@ -37,7 +37,7 @@ namespace epic8.Skills
                     //move to next target if we didn't proc the effect
                     continue;
                 }
-                if (!DebuffCalc.EffectivenessCheck(skillContext.User, target))
+                if (!DebuffCalc.EffectivenessCheck(effectContext.Source, target))
                 {
                     Console.WriteLine($"{target.Name} resisted buff dispel.");
                     return;
@@ -52,7 +52,7 @@ namespace epic8.Skills
                     //remove the debuff.
                     target.StatusEffects.Remove(buff);
                 }
-                Console.WriteLine($"{skillContext.User.Name} has dispelled all buffs from {target.Name}");
+                Console.WriteLine($"{effectContext.Source.Name} has dispelled all buffs from {target.Name}");
             }
         }
     }

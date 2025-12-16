@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace epic8.Skills
+namespace epic8.Effects
 {
-    public class CleanseAllDebuffsEffect : ISkillEffect
+    public class CleanseAllDebuffsEffect : IEffect
     {
         public EffectTargetType TargetType { get; }
 
@@ -17,9 +17,9 @@ namespace epic8.Skills
             TargetType = targetType;
         }
 
-        public void ApplyEffect(SkillContext skillContext)
+        public void ApplyEffect(EffectContext effectContext)
         {
-            foreach (Character target in skillContext.GetTargets(TargetType))
+            foreach (Character target in effectContext.GetTargets(TargetType))
             {
                 //get list of all debuffs on the target
                 List<StatusEffect> debuffs = target.StatusEffects.Where(e => !(e.IsBuff)).ToList();
@@ -31,7 +31,7 @@ namespace epic8.Skills
                     //remove the debuff.
                     target.StatusEffects.Remove(debuff);
                 }
-                Console.WriteLine($"{skillContext.User.Name} has cleansed all debuffs from {target.Name}");
+                Console.WriteLine($"{effectContext.Source.Name} has cleansed all debuffs from {target.Name}");
 
             }
         }

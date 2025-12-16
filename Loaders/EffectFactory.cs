@@ -1,5 +1,5 @@
 ﻿using epic8.BuffsDebuffs;
-using epic8.Skills;
+using epic8.Effects;
 using epic8.Units;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ namespace epic8.Loaders
 {
     public static class EffectFactory
     {
-        public static ISkillEffect Create(SkillEffectData data)
+        public static IEffect Create(SkillEffectData data)
         {
             string type = data.EffectType;
 
@@ -39,7 +39,7 @@ namespace epic8.Loaders
             }
         }
         //DamageEffect
-        private static ISkillEffect CreateDamage(SkillEffectData data)
+        private static IEffect CreateDamage(SkillEffectData data)
         {
             var d = data.Damage;
 
@@ -60,7 +60,7 @@ namespace epic8.Loaders
         }
 
         //ApplyStatChangeEffect
-        private static ISkillEffect CreateStatChange(SkillEffectData data)
+        private static IEffect CreateStatChange(SkillEffectData data)
         {
             var d = data.StatChange;
 
@@ -91,7 +91,7 @@ namespace epic8.Loaders
         }
 
         //HealEffect
-        private static ISkillEffect CreateHeal(SkillEffectData data)
+        private static IEffect CreateHeal(SkillEffectData data)
         {
             var d = data.Heal;
 
@@ -103,7 +103,7 @@ namespace epic8.Loaders
         }
 
         //ApplyBarrier
-        private static ISkillEffect CreateBarrier(SkillEffectData data)
+        private static IEffect CreateBarrier(SkillEffectData data)
         {
             var d = data.Barrier;
 
@@ -115,7 +115,7 @@ namespace epic8.Loaders
         }
 
         //CleanseDebuff
-        private static ISkillEffect CreateCleanseDebuff(SkillEffectData data)
+        private static IEffect CreateCleanseDebuff(SkillEffectData data)
         {
             var d = data.CleanseDebuff;
 
@@ -125,7 +125,7 @@ namespace epic8.Loaders
         }
 
         //CRPush
-        private static ISkillEffect CreateCRPush(SkillEffectData data)
+        private static IEffect CreateCRPush(SkillEffectData data)
         {
             var d = data.CRPush;
 
@@ -135,7 +135,7 @@ namespace epic8.Loaders
         }
 
         //DispelAllBuffs
-        private static ISkillEffect CreateDispelAllBuffs(SkillEffectData data)
+        private static IEffect CreateDispelAllBuffs(SkillEffectData data)
         {
             var d = data.DispelAllBuffs;
             EffectTargetType TargetType;
@@ -144,7 +144,7 @@ namespace epic8.Loaders
         }
 
         //ApplyImmunity
-        private static ISkillEffect CreateApplyImmunity(SkillEffectData data)
+        private static IEffect CreateApplyImmunity(SkillEffectData data)
         {
             var d = data.ApplyImmunity;
             EffectTargetType TargetType;

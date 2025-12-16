@@ -1,5 +1,5 @@
 ﻿using epic8.Field;
-using epic8.Skills;
+using epic8.Effects;
 using epic8.Units;
 using System;
 using System.Collections.Generic;
@@ -43,7 +43,13 @@ namespace epic8.PassiveSkills
             }
 
             //don't counter if the skill we got hit by was a counter
-            if(e.skillContext.BattleContext.ActingUnit != e.skillContext.User)
+            if(e.effectContext.BattleContext.ActingUnit != e.effectContext.Source)
+            {
+                return;
+            }
+
+            //don/t counter if the skill user was defeated by some kind of proc damage
+            if (!(e.effectContext.Source.isAlive))
             {
                 return;
             }
@@ -51,9 +57,13 @@ namespace epic8.PassiveSkills
             //check if we made the counter% chance
             if(_rng.NextDouble() <= _chance)
             {
-                //Attack skillContext.user with our Skill 1
-                Console.WriteLine($"{Owner.Name} counterattacks.");
-                Owner.Skills[0].UseSkill(Owner, e.skillContext.User, e.skillContext.BattleContext);
+                //put counter into the queue
+                e.effectContext.BattleContext.EnqueueReaction(() =>
+                {
+                    //Attack effectContext.user with our Skill 1
+                    Console.WriteLine($"{Owner.Name} counterattacks.");
+                    Owner.Skills[0].UseSkill(Owner, e.effectContext.Source, e.effectContext.BattleContext);
+                });
             }
         }
     }

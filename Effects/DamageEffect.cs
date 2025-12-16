@@ -7,18 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace epic8.Skills
+namespace epic8.Effects
 {
-    public class DamageEffect : ISkillEffect
+    public class DamageEffect : IEffect
     {
         public EffectTargetType TargetType { get; set; }
 
         //For unique damage multipliers
-        public Func<SkillContext, Character, float> UniqueDamageModFormula { get; }
+        public Func<EffectContext, Character, float> UniqueDamageModFormula { get; }
 
         //For unique flat damage modifiers
 
-        public Func<SkillContext, Character, float> UniqueFlatModFormula { get; }
+        public Func<EffectContext, Character, float> UniqueFlatModFormula { get; }
 
         //Damage multipliers
         public float AtkRate;
@@ -32,7 +32,7 @@ namespace epic8.Skills
 
 
         public DamageEffect(float atkRate, float hpScaling, float defScaling, float power, float skillUps,
-            Func<SkillContext, Character, float> uniqueDamageMod, Func<SkillContext, Character, float> uniqueFlatDamageMod, EffectTargetType targetType)
+            Func<EffectContext, Character, float> uniqueDamageMod, Func<EffectContext, Character, float> uniqueFlatDamageMod, EffectTargetType targetType)
         {
             AtkRate = atkRate;
             HpScaling = hpScaling;
@@ -44,26 +44,26 @@ namespace epic8.Skills
             TargetType = targetType;
         }
 
-        public void ApplyEffect(SkillContext skillContext)
+        public void ApplyEffect(EffectContext effectContext)
         {
             //item1 = damage, item2 = hitType
-            foreach (Character target in skillContext.GetTargets(TargetType))
+            foreach (Character target in effectContext.GetTargets(TargetType))
             {
-                BattleEvents.PublishOnBeforeAttack(new OnBeforeAttack(skillContext));
+                BattleEvents.PublishOnBeforeAttack(new OnBeforeAttack(effectContext));
 
                 //Grab how much damage we did to this target, and what kind of hit we made
-                Tuple<float, HitType> tuple = DamageCalc.CalculateDamage(skillContext, target, this);
+                Tuple<float, HitType> tuple = DamageCalc.CalculateDamage(effectContext, target, this);
 
-                skillContext.HitResults[target] = tuple.Item2;
+                effectContext.HitResults[target] = tuple.Item2;
                 if (tuple.Item2 == HitType.Miss)
-                    Console.WriteLine($"{skillContext.User.Name} has missed on {target.Name}!");
+                    Console.WriteLine($"{effectContext.Source.Name} has missed on {target.Name}!");
                 if (tuple.Item2 == HitType.Critical)
-                    Console.WriteLine($"{skillContext.User.Name} scores a critical hit on {target.Name}!");
+                    Console.WriteLine($"{effectContext.Source.Name} scores a critical hit on {target.Name}!");
                 if (tuple.Item2 == HitType.Crushing)
-                    Console.WriteLine($"{skillContext.User.Name} scores a crushing hit on {target.Name}!");
+                    Console.WriteLine($"{effectContext.Source.Name} scores a crushing hit on {target.Name}!");
 
                 target.TakeDamage(tuple.Item1);
-                BattleEvents.PublishAttackResult(new OnAttackResult(skillContext, target, tuple.Item2));
+                BattleEvents.PublishAttackResult(new OnAttackResult(effectContext, target, tuple.Item2));
             }
 
         }

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace epic8.Skills
+namespace epic8.Effects
 {
-    public class GainLoseFightingSpirit : ISkillEffect
+    public class GainLoseFightingSpirit : IEffect
     {
         private readonly float _amount;
         public EffectTargetType TargetType { get; }
@@ -18,9 +18,9 @@ namespace epic8.Skills
             TargetType = targetType;
         }
 
-        public void ApplyEffect(SkillContext skillContext)
+        public void ApplyEffect(EffectContext effectContext)
         {
-            foreach(Character target in skillContext.GetTargets(TargetType))
+            foreach(Character target in effectContext.GetTargets(TargetType))
             {
                 target.FightingSpirit += _amount;
                 if (_amount >= 0) {

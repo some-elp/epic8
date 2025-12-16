@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace epic8.Skills
+namespace epic8.Effects
 {
-    public class DecreaseDebuffDurationEffect : ISkillEffect
+    public class DecreaseDebuffDurationEffect : IEffect
     {
         private readonly int _duration;
         public EffectTargetType TargetType { get; }
@@ -19,9 +19,9 @@ namespace epic8.Skills
             TargetType = targetType;
         }
 
-        public void ApplyEffect(SkillContext skillContext)
+        public void ApplyEffect(EffectContext effectContext)
         {
-            foreach(Character target in skillContext.GetTargets(TargetType))
+            foreach(Character target in effectContext.GetTargets(TargetType))
             {
                 //get list of all debuffs on the target
                 List<StatusEffect> debuffs = target.StatusEffects.Where(e => !(e.IsBuff)).ToList();

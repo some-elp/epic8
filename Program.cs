@@ -5,7 +5,7 @@ using epic8.Field;
 using epic8.Loaders;
 using epic8.NPCBehavior;
 using epic8.PassiveSkills;
-using epic8.Skills;
+using epic8.Effects;
 using epic8.Units;
 using System;
 using System.Collections.Generic;
@@ -93,14 +93,15 @@ namespace epic8
             Senya.EffectChanceModifiers.Add(new SenyaS1ProvokeModifier());
 
             //CharacterLoader test
-            Character Aither = CharacterLoader.LoadFromFile("UnitJSONS/Aither.json");
+            Character Aither1 = CharacterLoader.LoadFromFile("UnitJSONS/Aither.json");
             Character Bask = CharacterLoader.LoadFromFile("UnitJSONS/Bask.json");
             Character Elson = CharacterLoader.LoadFromFile("UnitJSONS/Elson.json");
+            Character Aither2 = CharacterLoader.LoadFromFile("UnitJSONS/Aither.json");
 
 
             //Put the characters into teams
-            List<Character> team1 = new List<Character> { Bask, Elson };
-            List<Character> team2 = new List<Character> { Aither, Senya };
+            List<Character> team1 = new List<Character> { Aither1, Elson, Tieria };
+            List<Character> team2 = new List<Character> { Senya, Aither2 };
 
             //Create the match
             Battle battle = new Battle(team1, team2);

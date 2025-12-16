@@ -1,5 +1,5 @@
 ﻿using epic8.Calcs;
-using epic8.Skills;
+using epic8.Effects;
 using epic8.Units;
 using System;
 using System.Collections.Generic;
@@ -13,9 +13,11 @@ namespace epic8.Field
     //List of Event Records
 
     public record OnBattleStart();
-    public record OnAttackResult(SkillContext skillContext, Character Target, HitType Hit);
+
+    //Target here should be the skilleffect target.
+    public record OnAttackResult(EffectContext effectContext, Character Target, HitType Hit);
     public record OnTurnEnd(Character Unit);
-    public record OnBeforeAttack(SkillContext skillContext);
+    public record OnBeforeAttack(EffectContext effectContext);
 
     public static class BattleEvents
     {

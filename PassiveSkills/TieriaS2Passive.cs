@@ -6,11 +6,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using epic8.Effects;
 
 namespace epic8.PassiveSkills
 {
     public class TieriaS2Passive : Passive
     {
+        private readonly CRPushEffect _crPush = new CRPushEffect(0.15f, EffectTargetType.AlliesExceptSelf);
+
         //subscribe to relevant events
         public override void Initialize()
         {
@@ -25,20 +28,16 @@ namespace epic8.PassiveSkills
 
         private void HandleAttack(OnAttackResult e)
         {
-            if(e.skillContext.User != Owner || e.Hit == HitType.Miss)
+            if(e.effectContext.Source != Owner || e.Hit == HitType.Miss)
             {
                 return;
             }
 
             Console.WriteLine($"{Owner.Name}'s passive activates.");
-            foreach (Character ally in BattleContext.getAlliesOf(Owner))
-            {
-                if(ally != Owner && ally.isAlive)
-                {
-                    ally.CRMeter += 0.15f;
-                    Console.WriteLine($"{Owner.Name}'s S2 increases {ally.Name}'s CR by 15%.");
-                }
-            }
+
+            EffectContext ctx = new EffectContext(source: Owner, context: BattleContext, passiveSource: this);
+
+            _crPush.ApplyEffect(ctx);
         }
     }
 }

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace epic8.Skills
+namespace epic8.Effects
 {
-    public class ResetSkillCooldown : ISkillEffect
+    public class ResetSkillCooldown : IEffect
     {
         public EffectTargetType TargetType { get; }
         private int _choice;
@@ -18,9 +18,9 @@ namespace epic8.Skills
             _choice = choice;
         }
 
-        public void ApplyEffect(SkillContext skillContext)
+        public void ApplyEffect(EffectContext effectContext)
         {
-            foreach (Character target in skillContext.GetTargets(TargetType))
+            foreach (Character target in effectContext.GetTargets(TargetType))
             {
                 //Resets all skills
                 if(_choice == 0)

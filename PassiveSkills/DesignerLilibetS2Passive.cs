@@ -1,4 +1,5 @@
 ﻿using epic8.BuffsDebuffs;
+using epic8.Effects;
 using epic8.Field;
 using epic8.Units;
 using System;
@@ -28,7 +29,9 @@ namespace epic8.PassiveSkills
         //Gain 50 fighting spirit at start of battle
         private void HandleBattleStart(OnBattleStart e)
         {
-            Owner.FightingSpirit += 50.0f;
+            GainLoseFightingSpirit startBattleFS = new GainLoseFightingSpirit(50f, EffectTargetType.Self);
+            EffectContext ctx = new EffectContext(source: Owner, context: BattleContext, passiveSource: this);
+            startBattleFS.ApplyEffect(ctx);
         }
 
         /* Gain 10 fighting spirit for each debuff on an ally at end of enemy's turn
@@ -49,8 +52,9 @@ namespace epic8.PassiveSkills
                 if(count > 0)
                 {
                     float fsGain = 10 * count;
-                    Console.WriteLine($"{Owner.Name} gains {fsGain} Fighting Spirit from debuffs on allies.");
-                    Owner.FightingSpirit += fsGain;
+                    GainLoseFightingSpirit endOfTurnGain = new GainLoseFightingSpirit(fsGain, EffectTargetType.Self);
+                    EffectContext ctx = new EffectContext(source: Owner, context: BattleContext, passiveSource: this);
+                    endOfTurnGain.ApplyEffect(ctx);
                 }
                 if (Owner.FightingSpirit >= 100.0f)
                 {
@@ -64,34 +68,27 @@ namespace epic8.PassiveSkills
             Console.WriteLine($"{Owner.Name}'s Fighting Spirit is full.");
             Owner.FightingSpirit = 0;
 
-            //get list of all debuffs on caster
-            List<StatusEffect> debuffs = Owner.StatusEffects.Where(e => !(e.IsBuff)).ToList();
-            foreach (StatusEffect debuff in debuffs)
-            {
-                //not sure if we need this for debuffs, or at all honestly.
-                debuff.OnExpire(Owner);
+            //Full cleanse on self
+            CleanseAllDebuffsEffect fullCleanse = new CleanseAllDebuffsEffect(EffectTargetType.Self);
+            EffectContext ctx = new EffectContext(source: Owner, context: BattleContext, passiveSource: this);
+            fullCleanse.ApplyEffect(ctx);
 
-                //remove the debuff.
-                Owner.StatusEffects.Remove(debuff);
-            }
-
-            Console.WriteLine($"{Owner.Name} has cleansed all debuffs on themselves.");
+            //1 turn immunity for self
+            ApplyImmunity applyImmunity = new ApplyImmunity(1, EffectTargetType.Self);
+            applyImmunity.ApplyEffect(ctx);
 
             //1 turn Immunity buff
             Owner.AddStatusEffect(new Immunity(1, Owner));
 
             //1 turn defense buff
-            StatChange defBuff = new StatChange("Increase Defense", 1, "Increase Defense", true, TickTime.StartOfTurn,
-                [new StatModifier(StatType.Defense, 0.6f, 0f)])
-            { AppliedBy = Owner};
-            Owner.AddStatusEffect(defBuff);
-
-            Console.WriteLine($"{Owner.Name} has received Immunity and Increase Defense buffs for 1 turn.");
+            StatChange defenseBuff = new StatChange("Increase Defense", 1, "Increase Defense", true, TickTime.StartOfTurn,
+                [new StatModifier(StatType.Defense, 0.6f, 0f)]);
+            ApplyStatChangeEffect defBuff = new ApplyStatChangeEffect(defenseBuff, EffectTargetType.Self);
+            defBuff.ApplyEffect(ctx);
 
             //40% cr push
-            Owner.CRMeter += 0.4f;
-
-            Console.WriteLine($"{Owner.Name} gains 40% Combat Readiness.");
+            CRPushEffect crPush = new CRPushEffect(0.4f, EffectTargetType.Self);
+            crPush.ApplyEffect(ctx);
         }
     }
 }

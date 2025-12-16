@@ -1,5 +1,6 @@
 ﻿using epic8.BuffsDebuffs;
 using epic8.Calcs;
+using epic8.Effects;
 using epic8.Field;
 using epic8.Units;
 using System;
@@ -42,53 +43,59 @@ namespace epic8.PassiveSkills
         //Cannot crit or crushing blow
         private void HandleBeforeAttack(OnBeforeAttack e)
         {
-            if(e.skillContext.User != Owner)
+            if(e.effectContext.Source != Owner)
             {
                 return;
             }
 
-            e.skillContext.CanCrush = false;
-            e.skillContext.CanCrit = false;
+            e.effectContext.CanCrush = false;
+            e.effectContext.CanCrit = false;
         }
 
         //Damage when hit by a noncrit and activate Grace of the Battlefield skill.
         private void HandleAttackResult(OnAttackResult e)
         {
-            if(e.target != Owner)
+
+            EffectContext ctx = new EffectContext(source: Owner, context: BattleContext, passiveSource: this);
+            //won't proc if we didn't get hit
+            if(e.Target != Owner)
             {
                 return;
             }
 
+            //won't proc if we were crit
             if(e.Hit == HitType.Critical)
             {
                 return;
             }
 
             //skill user takes damage equal to 45% of user's attack,70% defpen
-            float effectiveDef = e.skillContext.User.GetEffectiveStats().Defense * 0.3f;
+            float effectiveDef = e.effectContext.Source.GetEffectiveStats().Defense * 0.3f;
             float damage = (float)Math.Round(0.45f * Owner.GetEffectiveStats().Attack*1.871/(effectiveDef/300+1));
 
-            Console.WriteLine($"{e.skillContext.User.Name} takes damage from Senya's passive.");
-            e.skillContext.User.TakeDamage(damage);
+            Console.WriteLine($"{e.effectContext.Source.Name} takes damage from Senya's passive.");
+            e.effectContext.Source.TakeDamage(damage);
 
             //if grace cd is 0 then activate grace and put it on cd
             if (_graceCooldown <= 0)
             {
-                _graceCooldown = 2;
-                //grant 2 turn barrier to all allies
-                Console.WriteLine("Senya activates Grace of the Battlefield.");
-                foreach(Character character in BattleContext.getAlliesOf(Owner))
+                //Put passive proc into the queue
+                e.effectContext.BattleContext.EnqueueReaction(() =>
                 {
-                    character.AddStatusEffect(new BarrierBuff(2, Owner.GetEffectiveStats().Attack * 0.25f, Owner));
-                    Console.WriteLine($"{character.Name} has received a barrier of {Owner.GetEffectiveStats().Attack * 0.25}");
-                }
-                
-                //2 turn speed buff for self
-                StatChange spdBuff = new StatChange("Increase Speed", 2, "Increase Speed", true, TickTime.StartOfTurn,
-                [new StatModifier(StatType.Speed, 0.3f, 0f)])
-                { AppliedBy = Owner };
-                Owner.AddStatusEffect(spdBuff);
-                Console.WriteLine($"{Owner.Name} has been affected by {spdBuff.Name} for 2 turns.");
+                    _graceCooldown = 2;
+
+                    //grant 2 turn barrier to all allies
+                    Console.WriteLine("Senya activates Grace of the Battlefield.");
+
+                    ApplyBarrier teamBarrier = new ApplyBarrier((context, t) => context.Source.GetEffectiveStats().Attack * 0.25f, 2, EffectTargetType.AllAllies);
+                    teamBarrier.ApplyEffect(ctx);
+
+                    //2 turn speed buff for self
+                    StatChange spdBuff = new StatChange("Increase Speed", 2, "Increase Speed", true, TickTime.StartOfTurn,
+                    [new StatModifier(StatType.Speed, 0.3f, 0f)]);
+                    ApplyStatChangeEffect speedBuff = new ApplyStatChangeEffect(spdBuff, EffectTargetType.Self);
+                    speedBuff.ApplyEffect(ctx);
+                });
             }
         }
 

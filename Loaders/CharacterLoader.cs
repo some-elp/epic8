@@ -1,6 +1,6 @@
 ﻿using epic8.Calcs;
 using epic8.NPCBehavior;
-using epic8.Skills;
+using epic8.Effects;
 using epic8.Units;
 using System;
 using System.Collections.Generic;
@@ -49,19 +49,19 @@ namespace epic8.Loaders
                 ControlType.NPC,
                 npc);
 
-            //List of Skills JSON data
+            //List of Effects JSON data
             foreach (SkillData skillData in data.Skills)
             {
                 //List of SkillEffect data for each skill
                 List<SkillEffectData> effectData = skillData.Effects;
 
                 //List that will contain the actual SkillEffects
-                List<ISkillEffect> skillEffects = [];
+                List<IEffect> skillEffects = [];
 
                 //Add actual SkillEffects to a list
                 foreach (var effect in effectData)
                 {
-                    ISkillEffect skillEffect = EffectFactory.Create(effect);
+                    IEffect skillEffect = EffectFactory.Create(effect);
                     skillEffects.Add(skillEffect);
                 }
 

@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace epic8.Skills
+namespace epic8.Effects
 {
-    public class ApplyDecreaseHitChance : ISkillEffect
+    public class ApplyDecreaseHitChance : IEffect
     {
         public EffectTargetType TargetType { get; }
         private readonly int _duration;
@@ -22,12 +22,12 @@ namespace epic8.Skills
             _chance = chance;
         }
 
-        public void ApplyEffect(SkillContext skillContext)
+        public void ApplyEffect(EffectContext effectContext)
         {
-            foreach (Character target in skillContext.GetTargets(TargetType))
+            foreach (Character target in effectContext.GetTargets(TargetType))
             {
                 //If we missed, don't apply the effects
-                if (skillContext.HitResults.TryGetValue(target, out HitType hit))
+                if (effectContext.HitResults.TryGetValue(target, out HitType hit))
                 {
                     if (hit == HitType.Miss)
                     {
@@ -41,7 +41,7 @@ namespace epic8.Skills
                 }
                 if (!target.IsImmune())
                 {
-                    if (!DebuffCalc.EffectivenessCheck(skillContext.User, target))
+                    if (!DebuffCalc.EffectivenessCheck(effectContext.Source, target))
                     {
                         Console.WriteLine($"{target.Name} resisted Decrease Hit Chance");
                         continue;
@@ -52,7 +52,7 @@ namespace epic8.Skills
                     Console.WriteLine($"{target.Name} is immune to Decrease Hit Chance");
                     continue;
                 }
-                    target.AddStatusEffect(new DecreaseHitChance(_duration, skillContext.User));
+                    target.AddStatusEffect(new DecreaseHitChance(_duration, effectContext.Source));
                 Console.WriteLine($"{target.Name} has been affected by Decrease Hit Chance for {_duration} turns.");
 
             }

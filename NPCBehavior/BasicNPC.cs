@@ -1,7 +1,7 @@
 ﻿using epic8.BuffsDebuffs;
 using epic8.Calcs;
 using epic8.Field;
-using epic8.Skills;
+using epic8.Effects;
 using epic8.Units;
 using System;
 using System.Collections.Generic;

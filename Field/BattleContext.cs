@@ -15,6 +15,9 @@ namespace epic8.Field
         //Unit whose turn it is
         public Character? ActingUnit { get; set; }
 
+        //Store reactions (counters, other skills)
+        public Queue<Action> ReactionQueue { get; } = new Queue<Action>();
+
         public BattleContext(List<Character> team1, List<Character> team2)
         {
             Team1 = team1;
@@ -59,6 +62,21 @@ namespace epic8.Field
                 {
                     passive.Initialize(character, this);
                 }
+            }
+        }
+
+        //Put things in the queue
+        public void EnqueueReaction(Action reaction)
+        {
+            ReactionQueue.Enqueue(reaction);
+        }
+
+        //Enact effects that are in the queue.
+        public void ResolveReactions()
+        {
+            while(ReactionQueue.Count > 0)
+            {
+                ReactionQueue.Dequeue().Invoke();
             }
         }
     }

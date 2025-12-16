@@ -1,4 +1,4 @@
-﻿using epic8.Skills;
+﻿using epic8.Effects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +9,6 @@ namespace epic8.EffectModifiers
 {
     public interface IEffectChanceModifier
     {
-        float ModifyEffect(ISkillEffect effect, SkillContext skillContext, float baseChance);
+        float ModifyEffect(IEffect effect, EffectContext effectContext, float baseChance);
     }
 }

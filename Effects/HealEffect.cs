@@ -6,23 +6,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace epic8.Skills
+namespace epic8.Effects
 {
-    public class HealEffect : ISkillEffect
+    public class HealEffect : IEffect
     {
         public EffectTargetType TargetType { get; }
 
-        private readonly Func<SkillContext, Character, float> _healFormula;
+        private readonly Func<EffectContext, Character, float> _healFormula;
 
-        public HealEffect(Func<SkillContext, Character, float> healFormula, EffectTargetType targetType)
+        public HealEffect(Func<EffectContext, Character, float> healFormula, EffectTargetType targetType)
         {
             _healFormula = healFormula;
             TargetType = targetType;
         }
 
-        public void ApplyEffect(SkillContext skillContext)
+        public void ApplyEffect(EffectContext effectContext)
         {
-            foreach (Character target in skillContext.GetTargets(TargetType))
+            foreach (Character target in effectContext.GetTargets(TargetType))
             {
                 //Unhealable check
                 if (target.StatusEffects.Any(e => e is Unhealable))
@@ -31,7 +31,7 @@ namespace epic8.Skills
                     continue;
                 }
                 //Get the amount that we should heal the target for
-                float amount = (float)(Math.Round(_healFormula(skillContext, target)));
+                float amount = (float)(Math.Round(_healFormula(effectContext, target)));
 
                 //Prevent overhealing by choosing the minimmum between our full heal and how much the target can be healed by
                 float actualHealAmount = Math.Min(amount, target.GetEffectiveStats().Hp - target.CurrentHP);

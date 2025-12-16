@@ -1,4 +1,4 @@
-﻿using epic8.Skills;
+﻿using epic8.Effects;
 using epic8.Units;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ namespace epic8.Calcs
 {
     public static class DamageCalc
     {
-        public static Tuple<float, HitType> CalculateDamage(SkillContext skillContext, Character target, DamageEffect dmgEffect)
+        public static Tuple<float, HitType> CalculateDamage(EffectContext effectContext, Character target, DamageEffect dmgEffect)
         {
 
             /*
@@ -28,21 +28,21 @@ namespace epic8.Calcs
             }
 
             //the 3 basic damage scaling stats
-            float attack = skillContext.User.GetEffectiveStats().Attack;
-            float hp = skillContext.User.GetEffectiveStats().Hp;
-            float userDefense = skillContext.User.GetEffectiveStats().Defense;
+            float attack = effectContext.Source.GetEffectiveStats().Attack;
+            float hp = effectContext.Source.GetEffectiveStats().Hp;
+            float userDefense = effectContext.Source.GetEffectiveStats().Defense;
 
             //1.1 or 1.0
-            ElementalAdvantage advantage = ElementHelper.GetElementalAdvantage(skillContext.User.Element, target.Element);
+            ElementalAdvantage advantage = ElementHelper.GetElementalAdvantage(effectContext.Source.Element, target.Element);
             float adv = ElementHelper.GetEleAdvantageMultiplier(advantage);
 
             //What kind of hit did we make
-            HitType hitType = HitCalc.DetermineHit(skillContext, target, advantage);
-            float hitMod = HitCalc.GetHitMultiplier(hitType, skillContext.User);
+            HitType hitType = HitCalc.DetermineHit(effectContext, target, advantage);
+            float hitMod = HitCalc.GetHitMultiplier(hitType, effectContext.Source);
 
             //used for skills with additional damage modifiers.
-            float extraMod = dmgEffect.UniqueDamageModFormula(skillContext, target);
-            float extraFlat = dmgEffect.UniqueFlatModFormula(skillContext, target);
+            float extraMod = dmgEffect.UniqueDamageModFormula(effectContext, target);
+            float extraFlat = dmgEffect.UniqueFlatModFormula(effectContext, target);
 
             //The actual damage formula
             float damage = (float)Math.Round(((attack*dmgEffect.AtkRate+hp*dmgEffect.HpScaling+userDefense*dmgEffect.DefScaling+extraFlat)

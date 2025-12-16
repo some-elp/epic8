@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace epic8.Skills
+namespace epic8.Effects
 {
-    public class CRPushEffect : ISkillEffect
+    public class CRPushEffect : IEffect
     {
         private readonly float _amount;
 
@@ -15,13 +15,13 @@ namespace epic8.Skills
 
         public CRPushEffect(float amount, EffectTargetType targetType)
         {
-            _amount = Math.Clamp(amount, 0f, 1.0f);
+            _amount = Math.Max(amount, 0f);
             TargetType = targetType;
         }
 
-        public void ApplyEffect(SkillContext skillContext)
+        public void ApplyEffect(EffectContext effectContext)
         {
-            foreach (Character target in skillContext.GetTargets(TargetType))
+            foreach (Character target in effectContext.GetTargets(TargetType))
             {
                 target.CRMeter += _amount;
 

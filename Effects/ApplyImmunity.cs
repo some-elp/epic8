@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace epic8.Skills
+namespace epic8.Effects
 {
-    public class ApplyImmunity : ISkillEffect
+    public class ApplyImmunity : IEffect
     {
         private readonly int _duration;
         public EffectTargetType TargetType { get; }
@@ -20,11 +20,11 @@ namespace epic8.Skills
             TargetType = targetType;
         }
 
-        public void ApplyEffect(SkillContext skillContext)
+        public void ApplyEffect(EffectContext effectContext)
         {
-            foreach (Character target in skillContext.GetTargets(TargetType))
+            foreach (Character target in effectContext.GetTargets(TargetType))
             {
-                target.AddStatusEffect(new Immunity(_duration, skillContext.User));
+                target.AddStatusEffect(new Immunity(_duration, effectContext.Source));
                 Console.WriteLine($"{target.Name} has received Immunity buff for {_duration} turns.");
             }
         }

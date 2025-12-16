@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace epic8.Skills
+namespace epic8.Effects
 {
-    public class GainExtraTurnEffect : ISkillEffect
+    public class GainExtraTurnEffect : IEffect
     {
         public EffectTargetType TargetType { get; }
         public GainExtraTurnEffect(EffectTargetType targetType)
@@ -15,9 +15,9 @@ namespace epic8.Skills
             TargetType = targetType;
         }
 
-        public void ApplyEffect(SkillContext skillContext)
+        public void ApplyEffect(EffectContext effectContext)
         {
-            foreach (Character target in skillContext.GetTargets(TargetType))
+            foreach (Character target in effectContext.GetTargets(TargetType))
             {
                 target.ExtraTurns++;
                 Console.WriteLine($"{target.Name} gains an Extra Turn.");

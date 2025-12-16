@@ -1,5 +1,5 @@
 ﻿using epic8.BuffsDebuffs;
-using epic8.Skills;
+using epic8.Effects;
 using epic8.Units;
 using System;
 using System.Collections.Generic;
@@ -21,14 +21,14 @@ namespace epic8.Calcs
     {
         private static Random rng = new Random();
         
-        public static HitType DetermineHit(SkillContext skillContext, Character target, ElementalAdvantage advantage)
+        public static HitType DetermineHit(EffectContext effectContext, Character target, ElementalAdvantage advantage)
         {
             bool canMiss = (advantage == ElementalAdvantage.Disadvantage);
 
             //eventually probably need to add a variable for total miss chance based on evasion + miss debuff etc
 
             //Check for miss debuff
-            if (skillContext.User.StatusEffects.Any(s => s is DecreaseHitChance))
+            if (effectContext.Source.StatusEffects.Any(s => s is DecreaseHitChance))
             {
                 if(canMiss)
                 {
@@ -51,22 +51,22 @@ namespace epic8.Calcs
             if(advantage == ElementalAdvantage.Advantage)
             {
                 //Elemental Advantage + 15% crit chance
-                if (skillContext.CanCrit && 
-                    rng.NextDouble() < (skillContext.User.GetEffectiveStats().CritChance + 15.0 - target.CriticalHitResistance) / 100.0)
+                if (effectContext.CanCrit && 
+                    rng.NextDouble() < (effectContext.Source.GetEffectiveStats().CritChance + 15.0 - target.CriticalHitResistance) / 100.0)
                     return HitType.Critical;
                 //Elemental Advantage + 50% chance of crushing hit
-                if (skillContext.CanCrush && 
+                if (effectContext.CanCrush && 
                     rng.NextDouble() < 0.8)
                     return HitType.Crushing;
             }
             else
             {
                 //Roll our crit chance for a critical hit
-                if (skillContext.CanCrit && 
-                    rng.NextDouble() < (skillContext.User.GetEffectiveStats().CritChance - target.CriticalHitResistance) / 100.0)
+                if (effectContext.CanCrit && 
+                    rng.NextDouble() < (effectContext.Source.GetEffectiveStats().CritChance - target.CriticalHitResistance) / 100.0)
                     return HitType.Critical;
                 //If we didn't make a crit, we can check to see if we made a crushing hit
-                if (skillContext.CanCrush && 
+                if (effectContext.CanCrush && 
                     rng.NextDouble() < 0.3)
                     return HitType.Crushing;
             }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace epic8.Skills
+namespace epic8.Effects
 {
 
     public enum EffectTargetType
@@ -15,11 +15,13 @@ namespace epic8.Skills
         AllAllies,
         AllEnemies,
         RandomEnemy,
-        RandomAlly
+        RandomAlly,
+        TwoEnemy,
+        AlliesExceptSelf
     }
-    public interface ISkillEffect
+    public interface IEffect
     {
         EffectTargetType TargetType { get; }
-        void ApplyEffect(SkillContext skillContext);
+        void ApplyEffect(EffectContext effectContext);
     }
 }

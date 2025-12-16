@@ -4,7 +4,7 @@ using epic8.EffectModifiers;
 using epic8.Field;
 using epic8.NPCBehavior;
 using epic8.PassiveSkills;
-using epic8.Skills;
+using epic8.Effects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -91,7 +91,7 @@ namespace epic8.Units
         public void AddStatusEffect(StatusEffect effect)
         {
             //Prevent duplicate status effects
-            StatusEffect existingEffect = StatusEffects.FirstOrDefault(s => s.Category == effect.Category);
+            StatusEffect? existingEffect = StatusEffects.FirstOrDefault(s => s.Category == effect.Category);
 
             //If we don't already have effect of this type
             if (existingEffect == null)
@@ -409,6 +409,7 @@ namespace epic8.Units
                     return;
                 }
                 skill.UseSkill(this, target, context);
+                context.ResolveReactions();
             }
         }
 
@@ -426,7 +427,7 @@ namespace epic8.Units
                     Console.WriteLine($"{i + 1}: {Skills[i].Name} - Cooldown: {Skills[i].CurrentCooldown} ");
                 }
             }
-            //User picks a skill by pressing 1-3
+            //Source picks a skill by pressing 1-3
             int skillChoice;
             while (true)
             {
@@ -486,6 +487,7 @@ namespace epic8.Units
 
                 Character target = aliveEnemies[targetChoice];
                 skill.UseSkill(this, target, context);
+                context.ResolveReactions();
             }
             else if(skill.TargetType == TargetType.SingleAlly)
             {
@@ -517,11 +519,13 @@ namespace epic8.Units
 
                 Character target = allies[targetChoice];
                 skill.UseSkill(this, target, context);
+                context.ResolveReactions();
             }
             else if (skill.TargetType == TargetType.Self)
             {
                 //Don't need the user to pick a target in this case.
                 skill.UseSkill(this, this, context);
+                context.ResolveReactions();
             }
         }
 
