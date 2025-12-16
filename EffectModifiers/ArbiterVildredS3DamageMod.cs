@@ -7,15 +7,13 @@ using System.Threading.Tasks;
 
 namespace epic8.EffectModifiers
 {
-    public class SenyaS1ProvokeModifier : IEffectModifier
+    public class ArbiterVildredS3DamageMod : IEffectModifier
     {
         public float ModifyEffect(IEffect effect, EffectContext effectContext)
         {
-            //If it is not senya's turn, +25% provoke chance
-            if(effect is ApplyProvoke && effectContext.BattleContext.ActingUnit != effectContext.Source
-                && effectContext.SkillUsed == effectContext.Source.Skills[0])
+            if (effect is DamageEffect && effectContext.ConsumedFocus && effectContext.SkillUsed == effectContext.Source.Skills[1])
             {
-                return 0.25f;
+                return 0.19f;
             }
             return 0f;
         }

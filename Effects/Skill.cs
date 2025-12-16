@@ -47,15 +47,14 @@ namespace epic8.Effects
             EffectContext effectContext = new EffectContext(user, context, target, this);
 
             Console.WriteLine($"{user.Name} uses {this.Name} targeting {target.Name}");
+            //We have used this skill, so put it on cooldown.
+            CurrentCooldown = Cooldown;
 
             //Go through list of this skill's effects and apply them in order
             foreach (IEffect effect in Effects)
             {
                 effect.ApplyEffect(effectContext);
             }
-
-            //We have used this skill, so put it on cooldown.
-            CurrentCooldown = Cooldown;
         }
     }
 }

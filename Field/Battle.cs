@@ -1,4 +1,5 @@
-﻿using epic8.PassiveSkills;
+﻿using epic8.BuffsDebuffs;
+using epic8.PassiveSkills;
 using epic8.Units;
 using System;
 using System.Collections.Generic;
@@ -54,9 +55,18 @@ namespace epic8.Field
                 //Check to see if any units have died after this turn.
                 foreach (Character unit in _team1.Concat(_team2))
                 {
-                    if (unit.CurrentHP <= 0)
+                    if (unit.CurrentHP <= 0 && unit.isAlive)
                     {
                         unit.isAlive = false;
+                        foreach (StatusEffect effect in unit.StatusEffects)
+                        {
+                            //not sure if we need this for debuffs, or at all honestly.
+                            effect.OnExpire(unit);
+
+                            //remove the debuff.
+                            unit.StatusEffects.Remove(effect);
+                        }
+                        BattleEvents.PublishOnDefeatResult(new OnDefeat(unit, context));
                         foreach (Passive passive in unit.Passives)
                         {
                             passive.Dispose();
@@ -81,9 +91,18 @@ namespace epic8.Field
                 //Check to see if any units have died after this turn.
                 foreach ( Character unit in _team1.Concat(_team2))
                 {
-                    if (unit.CurrentHP <= 0 )
+                    if (unit.CurrentHP <= 0 && unit.isAlive)
                     {
                         unit.isAlive = false;
+                        foreach (StatusEffect effect in unit.StatusEffects)
+                        {
+                            //not sure if we need this for debuffs, or at all honestly.
+                            effect.OnExpire(unit);
+
+                            //remove the debuff.
+                            unit.StatusEffects.Remove(effect);
+                        }
+                        BattleEvents.PublishOnDefeatResult(new OnDefeat(unit, context));
                         foreach (Passive passive in unit.Passives)
                         {
                             passive.Dispose();

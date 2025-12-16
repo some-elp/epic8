@@ -12,7 +12,10 @@ namespace epic8.Effects
 {
     public class EffectContext
     {
+        //What unit this skill/passive came from
         public Character Source { get; }
+
+        //What unit is being targeted by this skill
         public Character? Target { get; }
 
         public BattleContext BattleContext { get; }
@@ -32,6 +35,12 @@ namespace epic8.Effects
 
         //For passives that automatically crit
         public bool AlwaysCrit { get; set; } = false;
+
+        //How many characters were defeated by this skill/passive
+        public int DefeatedUnits { get; set; } = 0;
+
+        //Did this skill/passive consume focus?
+        public bool ConsumedFocus { get; set; } = false;
 
         //cache for skill targets.
         private readonly Dictionary<EffectTargetType, List<Character>> _resolvedTargets = new();
@@ -58,10 +67,12 @@ namespace epic8.Effects
                     return new List<Character> { Source };
                 case EffectTargetType.SkillTarget:
                     return [Target];
-                case EffectTargetType.AllAllies:
+                case EffectTargetType.AliveAllies:
                     return BattleContext.getAlliesOf(Source).Where(a => a.isAlive).ToList();
-                case EffectTargetType.AllEnemies:
+                case EffectTargetType.AliveEnemies:
                     return BattleContext.getEnemiesOf(Source).Where(e => e.isAlive).ToList();
+                case EffectTargetType.AllAllies:
+                    return BattleContext.getAlliesOf(Source);
                 case EffectTargetType.TwoEnemy:
                     //Always include the skill target
                     List<Character> result = new List<Character> { Target };

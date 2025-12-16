@@ -23,29 +23,30 @@ namespace epic8.Calcs
         
         public static HitType DetermineHit(EffectContext effectContext, Character target, ElementalAdvantage advantage)
         {
-            bool canMiss = (advantage == ElementalAdvantage.Disadvantage);
+            float missChance = 0f;
 
-            //eventually probably need to add a variable for total miss chance based on evasion + miss debuff etc
+            //Add miss chance from target Evasion
+            missChance += target.Evasion / 100f;
 
-            //Check for miss debuff
-            if (effectContext.Source.StatusEffects.Any(s => s is DecreaseHitChance))
+            //Add miss chance from elemental disadvantage
+            if(advantage == ElementalAdvantage.Disadvantage)
             {
-                if(canMiss)
-                {
-                    //100% chance to miss if elemental advantage and miss debuff
-                    return HitType.Miss;
-                }
-
-                // 50% chance to miss if miss debuff
-                if (rng.NextDouble() <= 0.5)
-                {
-                    return HitType.Miss;
-                }
-
+                missChance += 0.5f;
             }
-            //Elemental disadvantage miss chance for now
-            if (canMiss && rng.NextDouble() <= 0.5)
+
+            //+50% miss chance from decrease hit chance
+            if(effectContext.Source.StatusEffects.Any(s => s is DecreaseHitChance))
+            {
+                missChance += 0.5f;
+            }
+            
+            //subtract hit chance from miss chance
+            missChance -= effectContext.Source.HitChance;
+
+            if(rng.NextDouble() <= missChance)
+            {
                 return HitType.Miss;
+            }
 
             //If we're attacking with advantage, bonus chances
             if(advantage == ElementalAdvantage.Advantage)

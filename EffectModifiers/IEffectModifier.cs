@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace epic8.EffectModifiers
 {
-    public interface IEffectChanceModifier
+    public interface IEffectModifier
     {
-        float ModifyEffect(IEffect effect, EffectContext effectContext, float baseChance);
+        public float ModifyEffect(IEffect effect, EffectContext effectContext);
     }
 }

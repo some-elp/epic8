@@ -12,12 +12,14 @@ namespace epic8.Effects
     {
         Self,
         SkillTarget,
+        AliveAllies,
+        AliveEnemies,
         AllAllies,
-        AllEnemies,
+        AlliesExceptSelf,
         RandomEnemy,
         RandomAlly,
         TwoEnemy,
-        AlliesExceptSelf
+
     }
     public interface IEffect
     {

@@ -19,8 +19,6 @@ namespace epic8.PassiveSkills
         //StatModifier attackPassive = new StatModifier(StatType.Attack, 0.3f);
         public override void Initialize()
         {
-            //+30% attack passive
-            //Owner.OtherStatModifiers.Add(attackPassive);
             //+50% Crit Resist passive
             Owner.CriticalHitResistance += 50f;
             //Senya cannot crit or crushing blow
@@ -33,7 +31,6 @@ namespace epic8.PassiveSkills
 
         public override void Dispose()
         {
-            //Owner.OtherStatModifiers.Remove(attackPassive);
             Owner.CriticalHitResistance -= 50f;
             BattleEvents.OnBeforeAttack -= HandleBeforeAttack;
             BattleEvents.OnAttackResult -= HandleAttackResult;
@@ -74,7 +71,7 @@ namespace epic8.PassiveSkills
             float damage = (float)Math.Round(0.45f * Owner.GetEffectiveStats().Attack*1.871/(effectiveDef/300+1));
 
             Console.WriteLine($"{e.effectContext.Source.Name} takes damage from Senya's passive.");
-            e.effectContext.Source.TakeDamage(damage);
+            e.effectContext.Source.TakeDamage(damage, e.effectContext.BattleContext);
 
             //if grace cd is 0 then activate grace and put it on cd
             if (_graceCooldown <= 0)
@@ -87,7 +84,7 @@ namespace epic8.PassiveSkills
                     //grant 2 turn barrier to all allies
                     Console.WriteLine("Senya activates Grace of the Battlefield.");
 
-                    ApplyBarrier teamBarrier = new ApplyBarrier((context, t) => context.Source.GetEffectiveStats().Attack * 0.25f, 2, EffectTargetType.AllAllies);
+                    ApplyBarrier teamBarrier = new ApplyBarrier((context, t) => context.Source.GetEffectiveStats().Attack * 0.25f, 2, EffectTargetType.AliveAllies);
                     teamBarrier.ApplyEffect(ctx);
 
                     //2 turn speed buff for self

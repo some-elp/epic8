@@ -29,9 +29,9 @@ namespace epic8.Effects
             float finalChance = _chance;
 
             //Maybe move this from Character into the skilleffect classes?
-            foreach (var mod in effectContext.Source.EffectChanceModifiers)
+            foreach (var mod in effectContext.Source.EffectModifiers)
             {
-                finalChance = mod.ModifyEffect(this, effectContext, finalChance);
+                finalChance += mod.ModifyEffect(this, effectContext);
             }
 
             foreach (Character target in effectContext.GetTargets(TargetType))

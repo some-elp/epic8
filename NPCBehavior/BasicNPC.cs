@@ -50,7 +50,7 @@ namespace epic8.NPCBehavior
             for(int i = user.Skills.Count; i > 0; i -= 1)
             {
                 //pick the first skill that is off cooldown
-                if (user.Skills[i-1].CurrentCooldown == 0)
+                if (user.Skills[i-1].CurrentCooldown <= 0)
                 {
                     skill = user.Skills[i-1];
                     break;

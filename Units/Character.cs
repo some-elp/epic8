@@ -53,9 +53,9 @@ namespace epic8.Units
         //List of passives owned by this character
         public List<Passive> Passives { get; set; } = [];
 
-        //List of EffectChanceModifiers owned by this character
+        //Lists of EffectModifiers owned by this character
         //Maybe move this from Character into the skilleffect classes?
-        public List<IEffectChanceModifier> EffectChanceModifiers { get; set; } = [];
+        public List<IEffectModifier> EffectModifiers { get; set; } = [];
 
         //Does this character have an extra turn to take?
         public int ExtraTurns { get; set; } = 0;
@@ -285,7 +285,7 @@ namespace epic8.Units
             return final;
         }
 
-        public void TakeDamage(float amount)
+        public void TakeDamage(float amount, BattleContext battleContext)
         {
             //find barrier in the buff list
             foreach (BarrierBuff barrier in StatusEffects.Where(b => b is BarrierBuff).ToList())
@@ -319,6 +319,16 @@ namespace epic8.Units
             if( CurrentHP <= 0 )
             {
                 isAlive = false;
+                foreach (StatusEffect effect in StatusEffects.ToList())
+                {
+                    //not sure if we need this for debuffs, or at all honestly.
+                    effect.OnExpire(this);
+
+                    //remove the debuff.
+                    this.StatusEffects.Remove(effect);
+                }
+                BattleEvents.PublishOnDefeatResult(new OnDefeat(this, battleContext));
+
                 foreach (Passive passive in Passives)
                 {
                     passive.Dispose();

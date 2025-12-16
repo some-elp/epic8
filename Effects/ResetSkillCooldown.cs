@@ -34,6 +34,7 @@ namespace epic8.Effects
                 else
                 {
                     target.Skills[_choice].CurrentCooldown = 0;
+                    Console.WriteLine($"The cooldown of {target.Name}'s {target.Skills[_choice].Name} was reset.");
                 }
             }
         }

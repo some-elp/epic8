@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace epic8.Effects
 {
-    public class CRPushbackEffect
+    public class CRPushbackEffect : IEffect
     {
         private readonly float _amount;
         private readonly float _chance;

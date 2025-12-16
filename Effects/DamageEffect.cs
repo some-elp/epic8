@@ -46,6 +46,10 @@ namespace epic8.Effects
 
         public void ApplyEffect(EffectContext effectContext)
         {
+            foreach (var mod in effectContext.Source.EffectModifiers)
+            {
+                AtkRate += mod.ModifyEffect(this, effectContext);
+            }
             //item1 = damage, item2 = hitType
             foreach (Character target in effectContext.GetTargets(TargetType))
             {
@@ -62,8 +66,12 @@ namespace epic8.Effects
                 if (tuple.Item2 == HitType.Crushing)
                     Console.WriteLine($"{effectContext.Source.Name} scores a crushing hit on {target.Name}!");
 
-                target.TakeDamage(tuple.Item1);
+                target.TakeDamage(tuple.Item1, effectContext.BattleContext);
                 BattleEvents.PublishAttackResult(new OnAttackResult(effectContext, target, tuple.Item2));
+                if (!target.isAlive)
+                {
+                    effectContext.DefeatedUnits++;
+                }
             }
 
         }
